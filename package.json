@@ -1,0 +1,87 @@
+{
+  "name": "ice-koa-react-scaffold",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server/index.js",
+  "scripts": {
+    "client": "ice dev --project-type=node",
+    "server": "nodemon server/app.js",
+    "start": "npm run client & npm run server",
+    "build": "ice build --project-type=node",
+    "lint": "eslint . --ext '.js,.jsx' --fix"
+  },
+  "publishConfig": {
+    "registry": "http://registry.npmjs.com",
+    "access": "public"
+  },
+  "buildConfig": {
+    "theme": "@icedesign/skin",
+    "entry": "client/index.js",
+    "localization": false
+  },
+  "proxyConfig": {
+    "/api": {
+      "enable": true,
+      "target": "http://127.0.0.1:3000"
+    }
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "dependencies": {
+    "@alifd/next": "^1.x",
+    "@alifd/theme-1": "^0.0.7",
+    "@antv/data-set": "^0.8.9",
+    "@icedesign/container": "^1.x",
+    "@icedesign/data-binder": "^1.x",
+    "@icedesign/form-binder": "^1.x",
+    "@icedesign/foundation-symbol": "^1.x",
+    "@icedesign/img": "^1.x",
+    "@icedesign/label": "^1.x",
+    "@icedesign/layout": "^1.x",
+    "@icedesign/theme": "^0.1.2",
+    "@koa/cors": "^2.2.2",
+    "async-validator": "^1.10.1",
+    "axios": "^0.18.0",
+    "bcrypt": "^3.0.4",
+    "bizcharts": "^3.4.1",
+    "classnames": "^2.2.5",
+    "history": "^4.7.2",
+    "koa": "^2.5.3",
+    "koa-bodyparser": "^4.2.1",
+    "koa-helmet": "^4.0.0",
+    "koa-logger": "^3.2.0",
+    "koa-mysql-session": "0.0.2",
+    "koa-respond": "^2.1.0",
+    "koa-router": "^7.4.0",
+    "koa-session-minimal": "^3.0.4",
+    "koa-session2": "^2.2.8",
+    "koa-static": "^5.0.0",
+    "moment": "^2.23.0",
+    "mysql": "^2.16.0",
+    "prop-types": "^15.6.2",
+    "react": "^16.6.3",
+    "react-dom": "^16.4.1",
+    "react-intl": "^2.8.0",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^5.0.0-alpha.6",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.3.0",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.0.3",
+    "eslint": "^4.13.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-babel": "^4.1.1",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.5.1",
+    "ice-scripts": "^1.6.0",
+    "koa-logger": "^3.2.0",
+    "nodemon": "^1.18.4"
+  },
+  "title": "test2",
+  "templateType": "Koa"
+}
