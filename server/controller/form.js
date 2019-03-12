@@ -93,6 +93,38 @@ class FormController {
     // console.log(member);
     return member;
   }
+  // 新增进程获取客户id
+  async getCustomerForSelect(ctx) {
+    const { id, name } = ctx.request.body;
+    const { authority, userId } = ctx.session;
+    console.log(`id:${id}`);
+    console.log(`authority:${authority}`);
+    console.log(`userId:${userId}`);
+    let sql = '';
+    if (authority === 'guest') {
+      sql += `and user_id = "${userId}"`;
+    }
+    if (id) {
+      sql += `and id = "${id}"`;
+    }
+    if (name) {
+      sql += `and name like "%${name}%"`;
+    }
+    await Form.getCustomerForSelect(sql).then(result => {
+      const customer = [];
+      for (const item of result) {
+        customer.push({
+          value: item.id,
+          label: item.name,
+        });
+      }
+      ctx.body = {
+        status: 200,
+        statusText: 'ok',
+        customer,
+      };
+    });
+  }
 }
 
 module.exports = new FormController();

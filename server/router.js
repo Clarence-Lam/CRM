@@ -2,6 +2,7 @@ const userController = require('./controller/user');
 const settingController = require('./controller/setting');
 const customerController = require('./controller/customer');
 const FormController = require('./controller/form');
+const WorkController = require('./controller/working');
 
 module.exports = (router) => {
   // 查看登录信息
@@ -35,7 +36,13 @@ module.exports = (router) => {
     .post('/getCustomer', customerController.getCustomer)
     .post('/getCustomerById', customerController.getCustomerById)
     .post('/addCustomer', customerController.addCustomer)
+    .post('/updateCustomer', customerController.updateCustomer)
+    .post('/deleteCustomerById', customerController.deleteCustomerById)
     // form
     .get('/getTeamMember', FormController.getTeamMember)
-    .get('/getTagForSelect', FormController.getTagForSelect);
+    .get('/getTagForSelect', FormController.getTagForSelect)
+    .post('/getCustomerForSelect', FormController.getCustomerForSelect)
+    // work
+    .post('/addWork', WorkController.addWork)
+    .post('/getWorking', WorkController.getWorking);
 };

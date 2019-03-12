@@ -196,7 +196,7 @@ export default class TeamTable extends Component {
                   </Col>
                   <Col l="19">
                     <FormBinder name="mark">
-                      <Input.TextArea placeholder="输入备注" name="mark" {...init('mark', { initValue: '' })} />
+                      <Input.TextArea placeholder="输入备注" name="mark" {...init('mark', { initValue: '' })} maxLength={200} hasLimitHint />
                     </FormBinder>
                   </Col>
                 </Row>

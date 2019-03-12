@@ -6,7 +6,7 @@ exports.addTeam = (value) => {
 };
 
 exports.getTeam = () => {
-  const sql = 'SELECT*FROM team ORDER BY create_date DESC';
+  const sql = 'SELECT*FROM team where isDelete = "0" ORDER BY create_date DESC';
   return query(sql);
 };
 
@@ -26,7 +26,7 @@ exports.addMember = (value) => {
 };
 
 exports.getMember = () => {
-  const sql = 'SELECT*FROM member ORDER BY create_date DESC';
+  const sql = 'SELECT*FROM member where isDelete = "0" ORDER BY create_date DESC';
   return query(sql);
 };
 
@@ -43,12 +43,12 @@ exports.updateMember = (value) => {
 };
 
 exports.deleteMember = (value) => {
-  const sql = 'DELETE FROM member WHERE id = ?';
+  const sql = 'UPDATE member SET isDelete = "1" WHERE id = ?';
   return query(sql, value);
 };
 
 exports.getTag = (value) => {
-  const sql = 'SELECT * FROM tag';
+  const sql = 'SELECT * FROM tag where isDelete = "0"';
   return query(sql, value);
 };
 
@@ -62,7 +62,7 @@ exports.updateTag = (value) => {
   return query(sql, value);
 };
 exports.deleteTag = (value) => {
-  const sql = 'DELETE FROM tag WHERE id = ?';
+  const sql = 'UPDATE tag SET isDelete = "1" WHERE id =?';
   return query(sql, value);
 };
 

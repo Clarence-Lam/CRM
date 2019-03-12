@@ -58,6 +58,9 @@
     "global-require": 0,
     "class-methods-use-this": 0,
     "no-restricted-syntax": 0,
-    "no-loop-func": 0
+    "no-loop-func": 0,
+    "no-underscore-dangle": 0,
+    "camelcase": 0,
+    "react/no-multi-comp": 0
   }
 }

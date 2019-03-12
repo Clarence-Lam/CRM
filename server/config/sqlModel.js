@@ -33,24 +33,26 @@ const query = (sql, values) => {
 const createCustomer =
   `CREATE TABLE if not exists customer
   (
-    id CHAR(255),
-    name CHAR(255),
-    id_card CHAR(255) UNIQUE ,
-    phone CHAR(255),
-    member_id CHAR(255),
-    user_id VARCHAR(255),
-    area CHAR(255),
-    tag VARCHAR(1000),
-    mark VARCHAR(255),
-    create_date DATETIME,
-    update_date DATETIME,
-    PRIMARY KEY (id)
+  id CHAR(255),
+  name CHAR(255),
+  id_card CHAR(255) UNIQUE ,
+  phone CHAR(255),
+  member_id CHAR(255),
+  user_id VARCHAR(255),
+  area CHAR(255),
+  tag VARCHAR(1000),
+  mark VARCHAR(255),
+  create_date DATETIME,
+  update_date DATETIME,
+  isDelete CHAR DEFAULT '0',
+  PRIMARY KEY (id)
   );`;
 const createTag =
   `CREATE TABLE if not exists tag
   (
   id CHAR(255),
   name CHAR(255),
+  isDelete CHAR DEFAULT '0',
   PRIMARY KEY (id)
   );
   `;
@@ -62,19 +64,21 @@ const createTeam =
   mark VARCHAR(255),
   create_date DATETIME,
   update_date DATETIME,
+  isDelete CHAR DEFAULT '0',
   PRIMARY KEY (id)
   );`;
 const createUser =
   `CREATE TABLE if not exists user
   (
-    id CHAR(255),
-    username CHAR(255) NOT NULL UNIQUE ,
-    password CHAR(255) NOT NULL,
-    name CHAR(255) NOT NULL,
-    create_date DATETIME,
-    update_date DATETIME,
-    authority VARCHAR(255),
-    PRIMARY KEY (id)
+  id CHAR(255),
+  username CHAR(255) NOT NULL UNIQUE ,
+  password CHAR(255) NOT NULL,
+  name CHAR(255) NOT NULL,
+  authority VARCHAR(255),
+  create_date DATETIME,
+  update_date DATETIME,
+  isDelete CHAR DEFAULT '0',
+  PRIMARY KEY (id)
   );`;
 const createMember =
   `CREATE TABLE if not exists member
@@ -86,13 +90,41 @@ const createMember =
   mark VARCHAR(255),
   create_date DATETIME,
   update_date DATETIME,
+  isDelete CHAR DEFAULT '0',
   PRIMARY KEY (id)
   );`;
 const createWork =
-  `CREATE TABLE if not exists work
+  `CREATE TABLE work
   (
   id CHAR(255),
   customer_id CHAR(255) NOT NULL,
+  member_id VARCHAR(255),
+  user_id VARCHAR(255),
+  status VARCHAR(255),
+  num INT DEFAULT 0,
+  income INT,
+  platform CHAR(255),
+  product CHAR(255),
+  money INT,
+  received INT,
+  return_point INT,
+  rebate INT,
+  mark VARCHAR(255),
+  create_date DATETIME,
+  update_date DATETIME,
+  interview_date DATETIME,
+  income_date DATETIME,
+  loan_date DATETIME,
+  isWork CHAR DEFAULT '0',
+  PRIMARY KEY (id)
+  );`;
+
+const createhistory =
+`CREATE TABLE if not exists history
+  (
+  id CHAR(255),
+  customer_id CHAR(255) NOT NULL,
+  member_id VARCHAR(255),
   user_id VARCHAR(255),
   status VARCHAR(255),
   income INT,
@@ -106,8 +138,29 @@ const createWork =
   update_date DATETIME,
   PRIMARY KEY (id)
   );`;
-const forignKey1 = 'ALTER TABLE member ADD FOREIGN KEY team_id_idxfk (team_id) REFERENCES team (id);';
 
+const creatWorkDetail =
+  `CREATE TABLE if not exists workDetail
+  (
+  id VARCHAR(255),
+  work_id VARCHAR(255),
+  statis VARCHAR(255),
+  income INT,
+  platform VARCHAR(255),
+  product VARCHAR(255),
+  money INT,
+  received INT,
+  return_point INT,
+  rebate INT,
+  mark INT,
+  interview_date DATETIME,
+  income_date DATETIME,
+  loan_date DATETIME,
+  create_date DATETIME,
+  update_date DATETIME
+  );`;
+const forignKey1 = 'ALTER TABLE member ADD FOREIGN KEY team_id_idxfk (team_id) REFERENCES team (id);';
+const insertAdmin = 'insert into user set id=?,username=?,password=?,name=?,authority=?,create_date=?,update_date=?;';
 const createTable = (sql) => {
   return query(sql, []);
 };
@@ -119,6 +172,8 @@ createTable(createTeam);
 createTable(createUser);
 createTable(createMember);
 createTable(createWork);
+createTable(createhistory);
+createTable(creatWorkDetail);
 // createTable(forignKey1);
 
 

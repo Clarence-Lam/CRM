@@ -67,15 +67,31 @@ export default class CustomerTable extends Component {
       title: '提示',
       content: '确认删除吗',
       onOk: () => {
-        const { data } = this.state;
-
-        data.splice(index, index + 1);
-        this.setState({
-          data,
-        });
+        this.deleteCustomerById(index);
       },
     });
   };
+
+  deleteCustomerById= (id) => {
+    this.setState({
+      loading: true,
+    });
+    axios
+      .post('/api/deleteCustomerById', { id })
+      .then((response) => {
+        if (response.data.status === 200) {
+          Message.success(response.data.statusText);
+        } else {
+          Message.warning(response.data.statusText);
+        }
+        this.setState({
+          loading: false,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   onSearchSubmit = (searchQuery) => {
     // let { create_date } = searchQuery;

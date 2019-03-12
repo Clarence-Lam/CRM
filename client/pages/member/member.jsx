@@ -233,7 +233,7 @@ export default class MemberTable extends Component {
                   </Col>
                   <Col l="19">
                     <FormBinder name="mark">
-                      <Input.TextArea placeholder="输入备注" name="mark" />
+                      <Input.TextArea placeholder="输入备注" name="mark" maxLength={200} hasLimitHint />
                     </FormBinder>
                   </Col>
                 </Row>

@@ -25,7 +25,7 @@ const sessionMysqlConfig = {
 };
 
 // 定义允许直接访问的url
-const allowpage = ['/', '/css/index.css', '/js/index.js', '/login', '/api/login'];
+const allowpage = ['/', '/css/index.css', '/js/index.js', '/login', '/api/login', '/api/register'];
 // 拦截
 function localFilter(ctx, next) {
   console.log(ctx.session);

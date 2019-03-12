@@ -28,6 +28,7 @@ export default class AddCustomer extends Component {
     },
     area: [],
     teamMember: [],
+    title: '新增客户',
   };
 
   formChange = (value) => {
@@ -41,6 +42,7 @@ export default class AddCustomer extends Component {
 
   handleSubmit = () => {
     this.form.validateAll((errors, values) => {
+      console.log(this.state);
       if (errors) {
         console.log('errors', errors);
         return;
@@ -60,9 +62,18 @@ export default class AddCustomer extends Component {
         .then((response) => {
           if (response.data.status === 200) {
             Toast.success(response.data.statusText);
-            this.setState({
-              // visible: false,
+            const customerId = response.data.row.id;
+            const customerName = response.data.row.name;
+            this.props.history.push({
+              pathname: `/add/work/${customerId}`,
+              state: {
+                customerId,
+                customerName,
+              },
             });
+          } else if (response.data.status === 202) {
+            Toast.success(response.data.statusText);
+            this.props.history.push('/customer');
           } else {
             Toast.warning(response.data.statusText);
           }
@@ -111,11 +122,14 @@ export default class AddCustomer extends Component {
       await axios.post('/api/getCustomerById', { id: this.props.location.state.id })
         .then((response) => {
           const { id, name, id_card, phone, member_id, area, tag, mark } = response.data.customer[0];
-          const areaNum = area.split(',')[1];
+          const areaNum = area.split(',');
+          const tagData = tag.split(',');
           this.setState({
             formValue: {
-              id, name, id_card, phone, member_id, area: areaNum, tag, mark: mark || '',
+              id, name, id_card, phone, member_id, area: areaNum[1], tag: tagData, mark: mark || '',
             },
+            area: [areaNum[0], areaNum[1]],
+            title: '修改客户信息',
           });
           console.log(this.state);
         }).catch((error) => {
@@ -131,7 +145,7 @@ export default class AddCustomer extends Component {
     this.getCustomerById();
   }
   render() {
-    const { TeamMember, tagData } = this.state;
+    const { TeamMember, tagData, title } = this.state;
 
     return (
       <IceContainer style={styles.form}>
@@ -143,7 +157,7 @@ export default class AddCustomer extends Component {
           onChange={this.formChange}
         >
           <div style={styles.formContent}>
-            <h2 style={styles.formTitle}>添加客户</h2>
+            <h2 style={styles.formTitle}>{title}</h2>
             <Row style={styles.formRow}>
               <Col l="2" style={styles.formLabel}>
                 <span>客户称谓：</span>
@@ -249,7 +263,7 @@ export default class AddCustomer extends Component {
               </Col>
               <Col l="6">
                 <FormBinder name="mark">
-                  <Input.TextArea placeholder="输入备注" name="mark" />
+                  <Input.TextArea placeholder="输入备注" name="mark" maxLength={200} hasLimitHint />
                 </FormBinder>
               </Col>
             </Row>

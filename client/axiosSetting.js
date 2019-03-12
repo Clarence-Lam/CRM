@@ -6,7 +6,9 @@ const history = createBrowserHistory();
 
 axios.interceptors.response.use((response) => {
   // Do something with response data
-  if (response.data.status === 403) {
+  if (response.status !== 200) {
+    Message.error('网络异常，请稍后再试。');
+  } else if (response.data.status === 403) {
     // console.log(router.hashRouter);
     // HashRouter.push('/user/login');
     Message.success('登陆超时，请重新登陆');

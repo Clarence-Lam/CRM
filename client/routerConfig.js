@@ -21,6 +21,8 @@ import Team from './pages/team';
 import Member from './pages/member';
 import User from './pages/user';
 import Tag from './pages/tag';
+import workTable from './pages/work/workTable';
+import addWork from './pages/work/addWork';
 
 const routerConfig = [
   {
@@ -103,6 +105,16 @@ const routerConfig = [
     path: '/tag',
     component: Tag,
     authority: 'admin',
+  },
+  {
+    path: '/working',
+    component: workTable,
+    authority: '',
+  },
+  {
+    path: '/add/work',
+    component: addWork,
+    authority: '',
   },
 ];
 

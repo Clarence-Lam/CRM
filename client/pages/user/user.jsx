@@ -80,7 +80,6 @@ export default class userTable extends Component {
     });
   };
   handleSubmit = (rowId) => {
-    console.log(rowId);
     this.form.validateAll((errors, values) => {
       if (errors) {
         console.log('errors', errors);

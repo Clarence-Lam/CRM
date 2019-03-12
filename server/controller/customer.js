@@ -49,18 +49,17 @@ class CustyomerController {
     const end = 10; // 默认页数
     const start = (pageNum - 1) * end;
     const limit = [start, end];
-    await CustomerModel.formatSql(param, limit);
     const customerData = await CustomerModel.getCustomer(param, limit).then(result => { return result; });
     const total = await CustomerModel.getCustomerTotal(param).then(result => { return result; });
     const data = [];
-    await Promise.all(customerData.map(async item => {
+    for await (const item of customerData) {
       const tag = [];
       const tagData = item.tag.split(',');
-      await Promise.all(tagData.map(async (item1) => {
+      for await (const item1 of tagData) {
         const tagName = await Form.getTagById(item1);
         tag.push(tagName);
-        return Promise.resolve(item1);
-      }));
+        // return Promise.resolve(item1);
+      }
       const member = await Form.getMemberById(item.member_id);
       data.push({
         id: item.id,
@@ -73,8 +72,8 @@ class CustyomerController {
         member: member[0].member_name,
         create_date: item.create_date,
       });
-      return Promise.resolve(item);
-    }));
+      // return Promise.resolve(item);
+    }
     ctx.body = {
       status: 200,
       statusText: 'ok',
@@ -105,12 +104,18 @@ class CustyomerController {
           tagData += (`,${tag[i]}`);
         }
       }
-      const post = { id: uuidv1(), name, id_card, phone, member_id, user_id, area, tag: tagData, mark, create_date: datetime, update_date: datetime };
+      const uuid = uuidv1();
+      const post = { id: uuid, name, id_card, phone, member_id, user_id, area, tag: tagData, mark, create_date: datetime, update_date: datetime };
       await CustomerModel.addCustomer(post).then(result => {
         ctx.body = {
           status: 200,
           statusText: '录入客户信息成功',
           customer: result,
+          row: {
+            id: uuid,
+            name,
+            member_id,
+          },
         };
       });
     }
@@ -130,6 +135,49 @@ class CustyomerController {
 
 
     // CustomerModel.formatSql(post);
+  }
+
+  async updateCustomer(ctx) {
+    const { id, name, id_card, phone, member_id, mark, tag } = ctx.request.body;
+    let { area } = ctx.request.body;
+
+    const results = await CustomerModel.getCustomerByIdcard(id_card);
+    if (results[0].count === 0) {
+      ctx.body = {
+        status: 201,
+        statusText: '查无当前客户信息，请重新选择。',
+      };
+    } else {
+      const datetime = moment().format('YYYY-MM-DD HH:mm:ss');
+      area = `${area[0]},${area[1]}`;
+      let tagData = '';
+      for (let i = 0; i < tag.length; i++) {
+        if (i === 0) {
+          tagData = tag[i];
+        } else {
+          tagData += (`,${tag[i]}`);
+        }
+      }
+      const post = { name, id_card, phone, member_id, area, tag: tagData, mark, update_date: datetime };
+      await CustomerModel.updateCustomer(post, id).then(result => {
+        ctx.body = {
+          status: 202,
+          statusText: '客户信息修改成功',
+          customer: result,
+        };
+      });
+    }
+  }
+  async deleteCustomerById(ctx) {
+    const { id } = ctx.request.body;
+
+    await CustomerModel.deleteCustomerById(id).then(result => {
+      ctx.body = {
+        status: 200,
+        statusText: '成功删除客户',
+        customer: result,
+      };
+    });
   }
 }
 module.exports = new CustyomerController();

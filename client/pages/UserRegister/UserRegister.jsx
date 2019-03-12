@@ -8,6 +8,7 @@ import {
   FormError as IceFormError,
 } from '@icedesign/form-binder';
 import IceIcon from '@icedesign/foundation-symbol';
+import axios from 'axios';
 
 @withRouter
 class UserRegister extends Component {
@@ -22,9 +23,9 @@ class UserRegister extends Component {
     this.state = {
       value: {
         name: '',
-        email: '',
-        passwd: '',
-        rePasswd: '',
+        username: '',
+        password: '',
+        authority: '',
       },
     };
   }
@@ -63,9 +64,16 @@ class UserRegister extends Component {
         console.log('errors', errors);
         return;
       }
-      console.log(values);
-      Message.success('注册成功');
-      this.props.history.push('/user/login');
+      axios
+        .post('/api/register', { ...values })
+        .then((response) => {
+          if (response.data.status === 200) {
+            Message.success(response.data.statusText);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     });
   };
 
@@ -81,35 +89,33 @@ class UserRegister extends Component {
           <div style={styles.formItems}>
             <div style={styles.formItem}>
               <IceIcon type="person" size="small" style={styles.inputIcon} />
-              <IceFormBinder name="name" required message="请输入正确的用户名">
+              <IceFormBinder name="username" required message="请输入正确的用户名">
                 <Input placeholder="用户名" style={styles.inputCol} />
+              </IceFormBinder>
+              <IceFormError name="username" />
+            </div>
+
+            <div style={styles.formItem}>
+              <IceIcon type="person" size="small" style={styles.inputIcon} />
+              <IceFormBinder
+                name="name"
+                required
+                message="请输入正确的账号名称"
+              >
+                <Input
+                  maxLength={20}
+                  placeholder="账号名称"
+                  style={styles.inputCol}
+                />
               </IceFormBinder>
               <IceFormError name="name" />
             </div>
 
             <div style={styles.formItem}>
-              <IceIcon type="mail" size="small" style={styles.inputIcon} />
-              <IceFormBinder
-                type="email"
-                name="email"
-                required
-                message="请输入正确的邮箱"
-              >
-                <Input
-                  maxLength={20}
-                  placeholder="邮箱"
-                  style={styles.inputCol}
-                />
-              </IceFormBinder>
-              <IceFormError name="email" />
-            </div>
-
-            <div style={styles.formItem}>
               <IceIcon type="lock" size="small" style={styles.inputIcon} />
               <IceFormBinder
-                name="passwd"
+                name="password"
                 required
-                validator={this.checkPasswd}
               >
                 <Input
                   htmlType="password"
@@ -117,25 +123,21 @@ class UserRegister extends Component {
                   style={styles.inputCol}
                 />
               </IceFormBinder>
-              <IceFormError name="passwd" />
+              <IceFormError name="password" />
             </div>
 
             <div style={styles.formItem}>
-              <IceIcon type="lock" size="small" style={styles.inputIcon} />
+              <IceIcon type="person" size="small" style={styles.inputIcon} />
               <IceFormBinder
-                name="rePasswd"
+                name="authority"
                 required
-                validator={(rule, values, callback) =>
-                  this.checkPasswd2(rule, values, callback, this.state.value)
-                }
               >
                 <Input
-                  htmlType="password"
-                  placeholder="确认密码"
+                  placeholder="权限"
                   style={styles.inputCol}
                 />
               </IceFormBinder>
-              <IceFormError name="rePasswd" />
+              <IceFormError name="authority" />
             </div>
 
             <div className="footer">
