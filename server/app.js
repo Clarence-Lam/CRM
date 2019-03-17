@@ -28,7 +28,7 @@ const sessionMysqlConfig = {
 const allowpage = ['/', '/css/index.css', '/js/index.js', '/login', '/api/login', '/api/register'];
 // 拦截
 function localFilter(ctx, next) {
-  console.log(ctx.session);
+  // console.log(ctx.session);
   console.log(ctx.originalUrl);
   const url = ctx.originalUrl;
   if (allowpage.indexOf(url) > -1) {
@@ -53,7 +53,7 @@ app
   .use(session({
     key: 'USER_SID', // cookie 中存储 session-id 时的键名, 默认为 koa:sess
     cookie: { // 与 cookie 相关的配置
-      domain: '192.168.31.126', // 写 cookie 所在的域名
+      domain: 'localhost', // 写 cookie 所在的域名
       path: '/', // 写 cookie 所在的路径
       maxAge: 1000 * 60 * 60 * 2, // cookie 有效时长
       httpOnly: true, // 是否只用于 http 请求中获取

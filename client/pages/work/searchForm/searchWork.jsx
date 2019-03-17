@@ -2,12 +2,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Icon, Button } from '@alifd/next';
-import CustomForm from './index';
+import CustomForm from '../../Customer/components/searchForm/index';
 import axios from 'axios';
-import city from './../../../../static/city.json';
 
-export default class SearchFilter extends Component {
-  static displayName = 'SearchFilter';
+export default class searchWork extends Component {
+  static displayName = 'searchWork';
 
   static propTypes = {
     value: PropTypes.object.isRequired,
@@ -26,6 +25,7 @@ export default class SearchFilter extends Component {
     showAdvancedFields: false,
     tagData: [],
     TeamMember: [],
+    customerData: [],
   };
 
   /**
@@ -79,75 +79,62 @@ export default class SearchFilter extends Component {
     let { TeamMember } = this.state;
     const res = await axios.get('/api/getTeamMember', {});
     TeamMember = res.data.teamMember;
-    this.formConfig[5].componentProps.dataSource = TeamMember;
+    this.formConfig[2].componentProps.dataSource = TeamMember;
     this.setState({
       TeamMember,
     });
   };
 
+  getCustomer = async () => {
+    let { customerData } = this.state;
+    const res = await axios.post('/api/getCustomerForSelect');
+    customerData = res.data.customer;
+    this.formConfig[0].componentProps.dataSource = customerData;
+    this.setState({
+      customerData,
+    });
+    console.log(this.state);
+  };
+
   formConfig = [
     {
       label: '客户名称',
-      component: 'Input',
+      component: 'SearchSelect',
       componentProps: {
         placeholder: '请输入客户名称',
+        dataSource: this.state.customerData,
       },
       formBinderProps: {
-        name: 'name',
+        name: 'customer_id',
         required: false,
         message: '请输入客户名称',
       },
     },
     {
-      label: '身份证',
-      component: 'Input',
+      label: '状态',
+      component: 'Select',
       componentProps: {
-        placeholder: '请输入身份证',
+        placeholder: '请选择状态',
+        dataSource: [{
+          value: 'interview',
+          label: '面谈',
+        }, {
+          value: 'income',
+          label: '进件',
+        }, {
+          value: 'loan',
+          label: '放款',
+        }],
       },
       formBinderProps: {
-        name: 'id_card',
+        name: 'status',
         required: false,
-        message: '请输入身份证',
-      },
-    },
-    {
-      label: '联系方式',
-      component: 'Input',
-      componentProps: {
-        placeholder: '请输入联系方式',
-      },
-      formBinderProps: {
-        name: 'phone',
-      },
-    },
-    {
-      label: '区域',
-      component: 'CSelect',
-      advanced: true,
-      componentProps: {
-        placeholder: '请选择区域',
-        dataSource: city,
-      },
-      formBinderProps: {
-        name: 'area',
-      },
-    },
-    {
-      label: '标签',
-      component: 'Multiple',
-      advanced: true,
-      componentProps: {
-        placeholder: '请选择标签',
-        dataSource: this.state.tagData,
-      },
-      formBinderProps: {
-        name: 'tag',
+        message: '请选择状态',
       },
     },
     {
       label: '组别组员',
       component: 'CSelect',
-      advanced: true,
       componentProps: {
         placeholder: '请选择',
         dataSource: [],
@@ -157,14 +144,58 @@ export default class SearchFilter extends Component {
       },
     },
     {
-      label: '创建时间',
+      label: '面谈时间',
       component: 'RangePicker',
       advanced: true,
       componentProps: {
         placeholder: '请选择日期',
       },
       formBinderProps: {
-        name: 'create_date',
+        name: 'interview_date',
+      },
+    },
+    {
+      label: '进件时间',
+      component: 'RangePicker',
+      advanced: true,
+      componentProps: {
+        placeholder: '请选择日期',
+      },
+      formBinderProps: {
+        name: 'income_date',
+      },
+    },
+    {
+      label: '放款时间',
+      component: 'RangePicker',
+      advanced: true,
+      componentProps: {
+        placeholder: '请选择日期',
+      },
+      formBinderProps: {
+        name: 'loan_date',
+      },
+    },
+    {
+      label: '平台',
+      component: 'Input',
+      advanced: true,
+      componentProps: {
+        placeholder: '请输入平台',
+      },
+      formBinderProps: {
+        name: 'platform',
+      },
+    },
+    {
+      label: '产品',
+      component: 'Input',
+      advanced: true,
+      componentProps: {
+        placeholder: '请输入产品',
+      },
+      formBinderProps: {
+        name: 'product',
       },
     },
     // {
@@ -229,8 +260,8 @@ export default class SearchFilter extends Component {
   ];
 
   async componentWillMount() {
-    this.getTag();
     this.getTeamMember();
+    this.getCustomer();
   }
 
   render() {

@@ -11,10 +11,9 @@ class CustyomerController {
     const userId = ctx.session.userId;
     let param = '';
     if (authority === 'guest') {
-      param = `where user_id ='${userId}' `;
+      param = `and user_id ='${userId}' `;
     }
 
-    let ifWhere = !param;
     const searchQuery = ctx.request.body.searchQuery;
     for (const prop in searchQuery) {
       if (Object.prototype.hasOwnProperty.call(searchQuery, prop) && (searchQuery[prop].length !== 0)) {
@@ -22,24 +21,18 @@ class CustyomerController {
         // console.log(searchQuery[prop]);
         // console.log(typeof (searchQuery[prop]));
         if (typeof (searchQuery[prop]) === 'string') {
-          const temp = !ifWhere ? ' and ' : ' where ';
-          param += `${temp + prop} LIKE '%${searchQuery[prop]}%'`;
-          ifWhere = false;
+          param += ` and ${prop} LIKE '%${searchQuery[prop]}%'`;
         } else if (typeof (searchQuery[prop]) === 'object') {
           if (prop === 'tag') {
             searchQuery[prop].map(item => {
-              const temp = !ifWhere ? ' and ' : ' where ';
-              param += `${temp + prop} LIKE '%${item}%'`;
-              ifWhere = false;
+              param += ` and ${prop} LIKE '%${item}%'`;
               return item;
             });
           } else if (prop === 'create_date') {
-            const temp = !ifWhere ? ' and ' : ' where ';
             const time = searchQuery[prop];
             const startTime = moment(time[0]).format('YYYY-MM-DD 00:00:00');
             const endTime = moment(time[1]).format('YYYY-MM-DD 23:59:59');
-            ifWhere = false;
-            param += `${temp + prop} between '${startTime}' and '${endTime}'`;
+            param += ` and ${prop} between '${startTime}' and '${endTime}'`;
           }
         }
       }
@@ -49,6 +42,7 @@ class CustyomerController {
     const end = 10; // 默认页数
     const start = (pageNum - 1) * end;
     const limit = [start, end];
+    await CustomerModel.formatSql(param, limit);
     const customerData = await CustomerModel.getCustomer(param, limit).then(result => { return result; });
     const total = await CustomerModel.getCustomerTotal(param).then(result => { return result; });
     const data = [];

@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import IceContainer from '@icedesign/container';
-import { Table, Dialog, Button, Grid, Input, Message, Select, Form } from '@alifd/next';
+import cloneDeep from 'lodash.clonedeep';
+import { Table, Dialog, Button, Grid, Input, Message, Select, Form, Pagination } from '@alifd/next';
 import IceLabel from '@icedesign/label';
 import { withRouter } from 'react-router-dom';
 import ContainerTitle from '../../../components/ContainerTitle';
+import SearchForm from '../searchForm/searchWork';
 import WorkForm from '../workForm';
 
 import axios from 'axios';
@@ -17,6 +19,17 @@ const { Row, Col } = Grid;
 const Option = Select.Option;
 const FormItem = Form.Item;
 
+const defaultSearchQuery = {
+  // id: '',
+  name: '',
+  status: '',
+  platform: '',
+  product: '',
+  member_id: '',
+  interview_date: [],
+  income_date: [],
+  loan_date: [],
+};
 
 @withRouter
 export default class workTable extends Component {
@@ -25,6 +38,9 @@ export default class workTable extends Component {
     loading: false,
     visible: false,
     rowValue: {},
+    searchQuery: cloneDeep(defaultSearchQuery),
+    pageIndex: 1,
+    total: 0,
   };
 
   addWork = () => {
@@ -32,11 +48,22 @@ export default class workTable extends Component {
   }
 
   getWorking = async () => {
-    let { dataSource } = this.state;
-    const res = await axios.post('/api/getWorking', {});
+    this.setState({
+      loading: true,
+    });
+    let { dataSource, pageIndex, searchQuery } = this.state;
+    const res = await axios.post('/api/getWorking', { pageIndex, searchQuery });
     dataSource = res.data.workData;
     this.setState({
       dataSource,
+      loading: false,
+      total: res.data.total,
+    });
+  }
+
+  changeLoading = () => {
+    this.setState({
+      loading: !this.state.loading,
     });
   }
 
@@ -80,15 +107,74 @@ export default class workTable extends Component {
           修改
         </Button>
         <Button
-          onClick={() => this.handleDelete(value)}
-          type="normal"
+          onClick={() => this.getDetail(value, row)}
+          type="secondary"
           warning
         >
-          删除
+          查看详情
         </Button>
       </div>
     );
   }
+
+  renderPlatformProduct = (value, index, row) => {
+    let s = '';
+    value.forEach((item, key) => {
+      if (key === 0) {
+        s += item;
+      } else {
+        s += `,${item}`;
+      }
+    });
+    return (
+      <div>
+        {s}
+      </div>
+    );
+  }
+
+  onSearchSubmit = (searchQuery) => {
+    this.setState(
+      {
+        searchQuery,
+        pageIndex: 1,
+      },
+    );
+    this.getWorking();
+  }
+  onSearchReset =async () => {
+    await this.setState({
+      searchQuery: cloneDeep(defaultSearchQuery),
+    });
+    this.getWorking();
+  };
+
+  getDetail = (value, row) => {
+    console.log(value);
+    console.log(row);
+    this.props.history.push({
+      pathname: `/workDetail/${value}`,
+      state: {
+        id: value,
+        customerName: row.customerName,
+        teamName: row.teamName,
+        memberName: row.memberName,
+        phone: row.phone,
+        id_card: row.id_card,
+        customer_id: row.customer_id,
+      },
+    });
+  }
+
+  onPaginationChange = (pageIndex) => {
+    this.setState(
+      {
+        pageIndex,
+      },
+      this.getWorking
+      // console.log(this.state)
+    );
+  };
 
   TableColumns = [
     {
@@ -142,12 +228,14 @@ export default class workTable extends Component {
       title: '平台',
       dataIndex: 'platform',
       key: 'platform',
+      cell: this.renderPlatformProduct,
       width: 100,
     },
     {
       title: '产品',
       dataIndex: 'product',
       key: 'product',
+      cell: this.renderPlatformProduct,
       width: 100,
     },
     {
@@ -167,8 +255,8 @@ export default class workTable extends Component {
         width: 100,
       }, {
         title: '返点',
-        dataIndex: 'returnPoint',
-        key: 'returnPoint',
+        dataIndex: 'return_point',
+        key: 'return_point',
         width: 100,
       }, {
         title: '返利',
@@ -190,10 +278,9 @@ export default class workTable extends Component {
   async componentWillMount() {
     this.putTableColumns();
     this.getWorking();
-    console.log(this.state);
   }
   render() {
-    const { dataSource, loading, visible, rowValue } = this.state;
+    const { dataSource, loading, visible, rowValue, searchQuery, pageIndex, total } = this.state;
     return (
       <div>
         <IceContainer style={styles.container}>
@@ -202,6 +289,12 @@ export default class workTable extends Component {
             buttonText="添加进程"
             style={styles.title}
             onClick={() => this.addWork()}
+          />
+          <SearchForm
+            value={searchQuery}
+            onChange={this.onSeacrhChange}
+            onSubmit={this.onSearchSubmit}
+            onReset={this.onSearchReset}
           />
           <Table dataSource={dataSource} hasBorder={false} loading={loading} style={{ padding: '20px' }}>
             {this.TableColumns.map((item) => {
@@ -218,11 +311,20 @@ export default class workTable extends Component {
             );
           })}
           </Table>
+          <Pagination
+            style={styles.pagination}
+            current={pageIndex}
+            onChange={this.onPaginationChange}
+            total={total}
+            pageSize={10}
+          />
         </IceContainer>
         <WorkForm
           visible={visible}
           rowValue={rowValue}
           closeDialog={this.closeDialog}
+          getWorking={this.getWorking}
+          changeLoading={this.changeLoading}
         />
       </div>
     );
@@ -263,5 +365,9 @@ const styles = {
   },
   formRow: {
     marginBottom: '20px',
+  },
+  pagination: {
+    margin: '20px',
+    textAlign: 'right',
   },
 };

@@ -58,7 +58,7 @@ class searchForm extends Component {
         <div style={styles.formItem}>
           <span style={styles.formLabel}>{item.label}：</span>
           <IceFormBinder {...item.formBinderProps}>
-            <Input {...item.componentProps} style={{ width: '100%' }} />
+            <Input {...item.componentProps} style={{ width: '80%' }} />
           </IceFormBinder>
           <div style={styles.formError}>
             <IceFormError name={item.formBinderProps.name} />
@@ -86,7 +86,7 @@ class searchForm extends Component {
         <div style={styles.formItem}>
           <span style={styles.formLabel}>{item.label}：</span>
           <IceFormBinder {...item.formBinderProps}>
-            <RangePicker {...item.componentProps} style={{ width: '100%' }} format="YYYY-MM-DD" />
+            <RangePicker {...item.componentProps} style={{ width: '80%' }} format="YYYY-MM-DD" />
           </IceFormBinder>
         </div>
       </Col>
@@ -99,7 +99,7 @@ class searchForm extends Component {
         <div style={styles.formItem}>
           <span style={styles.formLabel}>{item.label}：</span>
           <IceFormBinder {...item.formBinderProps}>
-            <Select {...item.componentProps} style={{ width: '100%' }} />
+            <Select {...item.componentProps} style={{ width: '80%' }} />
           </IceFormBinder>
         </div>
       </Col>
@@ -112,7 +112,7 @@ class searchForm extends Component {
         <div style={styles.formItem}>
           <span style={styles.formLabel}>{item.label}：</span>
           <IceFormBinder {...item.formBinderProps}>
-            <Select mode="multiple" {...item.componentProps} style={{ width: '100%' }} />
+            <Select mode="multiple" {...item.componentProps} style={{ width: '80%' }} />
             {/* <Select {...item.componentProps} style={{ width: '100%' }} /> */}
           </IceFormBinder>
         </div>
@@ -127,8 +127,23 @@ class searchForm extends Component {
           <span style={styles.formLabel}>{item.label}：</span>
           <IceFormBinder {...item.formBinderProps}>
             {/* <Select {...item.componentProps} style={{ width: '100%' }} /> */}
-            <CascaderSelect {...item.componentProps} style={{ width: '302px' }} listStyle={{ width: '150px' }} />
+            <CascaderSelect {...item.componentProps} style={{ width: '80%' }} listStyle={{ width: '150px' }} />
 
+          </IceFormBinder>
+        </div>
+      </Col>
+    );
+  };
+
+  renderSearchSelect = (item) => {
+    return (
+      <Col l="8" key={item.label}>
+        <div style={styles.formItem}>
+          <span style={styles.formLabel}>{item.label}：</span>
+          <IceFormBinder {...item.formBinderProps}>
+            {/* <Select {...item.componentProps} style={{ width: '100%' }} /> */}
+            {/* <CascaderSelect {...item.componentProps} style={{ width: '80%' }} listStyle={{ width: '150px' }} /> */}
+            <Select showSearch placeholder="请选择客户" filterLocal {...item.componentProps} style={{ width: '80%' }} />
           </IceFormBinder>
         </div>
       </Col>
@@ -148,6 +163,8 @@ class searchForm extends Component {
         return this.rendercSelect(item);
       } else if (item.component === 'Multiple') {
         return this.renderMultiple1(item);
+      } else if (item.component === 'SearchSelect') {
+        return this.renderSearchSelect(item);
       }
     });
   };

@@ -119,6 +119,26 @@ export default class CustomerTable extends Component {
   }
 
   renderOper = (value, index, row) => {
+    if (global.user.authority === 'admin') {
+      return (
+        <div>
+          <Button
+            type="primary"
+            onClick={() => this.handleRedirect(value, row)}
+            style={{ marginRight: '10px' }}
+          >
+          修改
+          </Button>
+          <Button
+            onClick={() => this.handleDelete(value)}
+            type="normal"
+            warning
+          >
+          删除
+          </Button>
+        </div>
+      );
+    }
     return (
       <div>
         <Button
@@ -127,13 +147,6 @@ export default class CustomerTable extends Component {
           style={{ marginRight: '10px' }}
         >
           修改
-        </Button>
-        <Button
-          onClick={() => this.handleDelete(value)}
-          type="normal"
-          warning
-        >
-          删除
         </Button>
       </div>
     );
@@ -194,10 +207,11 @@ export default class CustomerTable extends Component {
     });
   }
 
-  onSearchReset = () => {
-    this.setState({
+  onSearchReset =async () => {
+    await this.setState({
       searchQuery: cloneDeep(defaultSearchQuery),
     });
+    this.getCustomer();
   };
   async componentWillMount() {
     this.getCustomer();

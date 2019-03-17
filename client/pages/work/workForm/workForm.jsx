@@ -10,6 +10,7 @@ import {
 } from '@icedesign/form-binder';
 import AddTalk from './addTalk';
 import Income from './income';
+import Loan from './loan';
 
 const { Row, Col } = Grid;
 
@@ -22,17 +23,25 @@ export default class WorkForm extends Component {
     // onChange: PropTypes.func,
     // onSubmit: PropTypes.func,
     closeDialog: PropTypes.func,
+    getWorking: PropTypes.func,
+    changeLoading: PropTypes.func,
   };
   constructor(props) {
     super(props);
     this.state = {
       formValue: {},
+      formWidth: {
+        formLabel: 6,
+        formCol: 18,
+      },
     };
   }
   static defaultProps = {
     // onChange: () => {},
     // onSubmit: () => {},
     closeDialog: () => {},
+    getWorking: () => {},
+    changeLoading: () => {},
   }
 
 
@@ -55,7 +64,11 @@ export default class WorkForm extends Component {
           removeForm={this.removeForm}
         />);
     } else if (status === 'loan') {
-      return (<div>3</div>);
+      return (
+        <Loan
+          rowValue={this.props.rowValue}
+          formValue={this.state.formValue}
+        />);
     }
   }
 
@@ -67,6 +80,8 @@ export default class WorkForm extends Component {
         return;
       }
       console.log('验证通过');
+      const changeLoading = this.props.changeLoading;
+      changeLoading();
       let url = '';
       let data = {};
       if (values.status === 'interview') {
@@ -76,31 +91,51 @@ export default class WorkForm extends Component {
           isAdd: false,
         };
       } else if (values.status === 'income') {
-        url = '';
+        url = '/api/toIncome';
+        data = {
+          work_id: this.props.rowValue.id,
+          interview_date: this.props.rowValue.interview_date,
+        };
       } else if (values.status === 'loan') {
-        url = '';
+        url = '/api/toLoan';
+        data = {
+          work_id: this.props.rowValue.id,
+        };
       }
       axios.post(url, { ...values, ...data }).then(response => {
+        changeLoading();
         if (response.data.status === 200) {
           Message.success(response.data.statusText);
         }
+        const { getWorking, closeDialog } = this.props;
+        closeDialog();
+        getWorking();
       }).catch(error => {
-
+        changeLoading();
+        console.log(error);
       });
     });
   }
 
   changeStatus = (value) => {
     let ind = {};
+    let width = { formLabel: 6, formCol: 18 };
     if (value === 'interview') {
       ind = {};
     } else if (value === 'income') {
       ind = {
         income: this.props.rowValue.income || 1,
-        incomeForm: [{}],
+        incomeForm: this.props.rowValue.incomeForm.length > 0 ? this.props.rowValue.incomeForm : [{}],
       };
     } else if (value === 'loan') {
-      ind = {};
+      ind = {
+        income: this.props.rowValue.income || 1,
+        incomeForm: this.props.rowValue.incomeForm.length > 0 ? this.props.rowValue.incomeForm : [{}],
+      };
+      width = {
+        formLabel: 3,
+        formCol: 5,
+      };
     }
     this.setState({
       formValue: {
@@ -109,6 +144,9 @@ export default class WorkForm extends Component {
         member_id: this.props.rowValue.member_id,
         mark: this.props.rowValue.mark,
         ...ind,
+      },
+      formWidth: {
+        ...width,
       },
     });
   }
@@ -134,12 +172,21 @@ export default class WorkForm extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    let width = { formLabel: 6, formCol: 18 };
+    if (nextProps.rowValue.status === 'loan') {
+      width = { formLabel: 3, formCol: 5 };
+    }
     this.setState({
       formValue: {
         status: nextProps.rowValue.status,
         customer_name: nextProps.rowValue.customerName,
         member_id: nextProps.rowValue.member_id,
         mark: nextProps.rowValue.mark,
+        incomeForm: nextProps.rowValue.incomeForm,
+        income: nextProps.rowValue.income,
+      },
+      formWidth: {
+        ...width,
       },
     });
   }
@@ -147,6 +194,7 @@ export default class WorkForm extends Component {
 
   render() {
     const { visible, rowValue } = this.props;
+    const { formLabel, formCol } = this.state.formWidth;
     return (
       <Dialog
         title="修改进程"
@@ -164,15 +212,15 @@ export default class WorkForm extends Component {
             value={this.state.formValue}
           >
             <Row style={styles.formRow}>
-              <Col span="6" style={styles.formLabel}>
+              <Col span={formLabel} style={styles.formLabel}>
                 <span>状态：</span>
               </Col>
-              <Col span="18" >
+              <Col span={formCol} >
                 <FormBinder name="status" required message="请选择状态">
                   <Select style={{ width: '150px' }} defaultValue={rowValue.status} onChange={this.changeStatus}>
-                    <Select.Option value="interview">面谈</Select.Option>
-                    <Select.Option value="income">进件</Select.Option>
-                    <Select.Option value="loan">放款</Select.Option>
+                    <Select.Option value="interview" disabled={this.props.rowValue.status === 'loan'}>面谈</Select.Option>
+                    <Select.Option value="income" disabled={this.props.rowValue.status === 'loan'}>进件</Select.Option>
+                    <Select.Option value="loan" disabled={this.props.rowValue.status === 'interview'}>放款</Select.Option>
                   </Select>
                 </FormBinder>
               </Col>

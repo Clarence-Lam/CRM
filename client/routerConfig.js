@@ -23,6 +23,7 @@ import User from './pages/user';
 import Tag from './pages/tag';
 import workTable from './pages/work/workTable';
 import addWork from './pages/work/addWork';
+import workDetail from './pages/work/datailWork';
 
 const routerConfig = [
   {
@@ -114,6 +115,11 @@ const routerConfig = [
   {
     path: '/add/work',
     component: addWork,
+    authority: '',
+  },
+  {
+    path: '/workDetail',
+    component: workDetail,
     authority: '',
   },
 ];
