@@ -5,6 +5,8 @@ import Footer from './components/Footer';
 import Intro from './components/Intro';
 import routerData from '../../routerConfig';
 
+import logoJpg from '../../static/TB1M_keCNnaK1RjSZFBXXcW7VXa-1950-1302.jpg';
+
 const { Row, Col } = Grid;
 
 export default class UserLayout extends Component {
@@ -48,7 +50,7 @@ const styles = {
     minWidth: '1200px',
     height: '100vh',
     backgroundImage:
-      'url(https://img.alicdn.com/tfs/TB1M_keCNnaK1RjSZFBXXcW7VXa-1950-1302.jpg)',
+      `url(${logoJpg})`,
     backgroundSize: 'cover',
     display: 'flex',
     flexDirection: 'column',

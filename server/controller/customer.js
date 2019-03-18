@@ -42,7 +42,7 @@ class CustyomerController {
     const end = 10; // 默认页数
     const start = (pageNum - 1) * end;
     const limit = [start, end];
-    await CustomerModel.formatSql(param, limit);
+    // await CustomerModel.formatSql(param, limit);
     const customerData = await CustomerModel.getCustomer(param, limit).then(result => { return result; });
     const total = await CustomerModel.getCustomerTotal(param).then(result => { return result; });
     const data = [];

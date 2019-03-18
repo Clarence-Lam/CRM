@@ -37,7 +37,7 @@ export default class Header extends Component {
       });
   };
   getSession = async () => {
-    axios
+    await axios
       .get('api/getSession')
       .then((response) => {
         if (response.status === 200) {
@@ -54,7 +54,7 @@ export default class Header extends Component {
       });
   }
   async componentWillMount() {
-    this.getSession();
+    await this.getSession();
   }
   render() {
     const { location = {} } = this.props;

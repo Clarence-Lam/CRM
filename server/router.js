@@ -3,6 +3,7 @@ const settingController = require('./controller/setting');
 const customerController = require('./controller/customer');
 const FormController = require('./controller/form');
 const WorkController = require('./controller/working');
+const Merit = require('./controller/merit');
 
 module.exports = (router) => {
   // 查看登录信息
@@ -47,5 +48,12 @@ module.exports = (router) => {
     .post('/toIncome', WorkController.toIncome)
     .post('/toLoan', WorkController.toLoan)
     .post('/getWorking', WorkController.getWorking)
-    .post('/getWorkDetail', WorkController.getWorkDetail);
+    .post('/getWorkDetail', WorkController.getWorkDetail)
+    // merit
+    .get('/getInterview', Merit.getInterview)
+    .get('/getIncome', Merit.getIncome)
+    .get('/getMoney', Merit.getMoney)
+    .get('/getReceived', Merit.getReceived)
+    .get('/getReturnPoint', Merit.getReturnPoint)
+    .get('/getRebate', Merit.getRebate);
 };

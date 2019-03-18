@@ -143,23 +143,24 @@ const creatWorkDetail =
   `CREATE TABLE if not exists workDetail
   (
     id VARCHAR(255),
-work_id VARCHAR(255),
-status VARCHAR(255),
-income INT,
-platform VARCHAR(255),
-product VARCHAR(255),
-money INT,
-received INT,
-return_point INT,
-rebate INT,
-mark VARCHAR(255),
-interview_date DATETIME,
-income_date DATETIME,
-loan_date DATETIME,
-create_date DATETIME,
-update_date DATETIME,
-isWork CHAR,
-PRIMARY KEY (id)
+    work_id VARCHAR(255),
+    member_id VARCHAR(255),
+    status VARCHAR(255),
+    income INT,
+    platform VARCHAR(255),
+    product VARCHAR(255),
+    money INT,
+    received INT,
+    return_point INT,
+    rebate INT,
+    mark VARCHAR(255),
+    interview_date DATETIME,
+    income_date DATETIME,
+    loan_date DATETIME,
+    create_date DATETIME,
+    update_date DATETIME,
+    isWork CHAR DEFAULT '0',
+    PRIMARY KEY (id)
   );`;
 const forignKey1 = 'ALTER TABLE member ADD FOREIGN KEY team_id_idxfk (team_id) REFERENCES team (id);';
 const insertAdmin = 'insert into user set id=?,username=?,password=?,name=?,authority=?,create_date=?,update_date=?;';

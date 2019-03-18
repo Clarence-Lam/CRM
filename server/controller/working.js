@@ -108,7 +108,7 @@ class WorkController {
       received = received === 0 ? '' : received;
       return_point = return_point === 0 ? '' : return_point;
       rebate = rebate === 0 ? '' : rebate;
-      if (details.length > 0) {
+      if (details.length > 0 || (item.status === 'interview' && !dateSql)) {
         data.push({
           ...item,
           customerName,
@@ -124,6 +124,7 @@ class WorkController {
           rebate,
           phone,
           id_card,
+          mark: item.mark || '',
         });
       }
     }
@@ -138,7 +139,7 @@ class WorkController {
 
   // 设置为进件
   async toIncome(ctx) {
-    const { work_id, status, income, incomeForm, mark, interview_date } = ctx.request.body;
+    const { work_id, status, income, incomeForm, mark, interview_date, member_id } = ctx.request.body;
 
     const work = new WorkController();
     const time = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -154,7 +155,7 @@ class WorkController {
         platform += `,${value.platform}`;
         product += `,${value.product}`;
       }
-      work.addIncome({ work_id, status, income, platform: value.platform, product: value.product, interview_date, income_date: time, create_date: time, update_date: time, mark });
+      work.addIncome({ work_id, status, income, platform: value.platform, product: value.product, member_id, interview_date, income_date: time, create_date: time, update_date: time, mark });
     });
     await work.updateWork(work_id, { status, update_date: time, platform, product, mark, income, income_date: time });
     ctx.body = {
@@ -194,17 +195,23 @@ class WorkController {
     const data = [];
     for await (const prop of works) {
       const customer = await Customer.getCustomerById(prop.customer_id);
-      console.log(customer);
-      const details = await Work.getDetailByWorkid(prop.id, '');
-      for await (const detail of details) {
+      if (prop.status === 'interview') {
         data.push({
           name: customer[0].name,
-          interview_date: detail.interview_date && detail.interview_date.substring(0, 10),
-          income_date: detail.income_date && detail.income_date.substring(0, 10),
-          loan_date: detail.loan_date && detail.loan_date.substring(0, 10),
-          platform: detail.platform,
-          product: detail.product,
+          interview_date: prop.interview_date.substring(0, 10),
         });
+      } else {
+        const details = await Work.getDetailByWorkid(prop.id, '');
+        for await (const detail of details) {
+          data.push({
+            name: customer[0].name,
+            interview_date: detail.interview_date && detail.interview_date.substring(0, 10),
+            income_date: detail.income_date && detail.income_date.substring(0, 10),
+            loan_date: detail.loan_date && detail.loan_date.substring(0, 10),
+            platform: detail.platform,
+            product: detail.product,
+          });
+        }
       }
     }
     ctx.body = {
