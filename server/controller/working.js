@@ -132,10 +132,6 @@ class WorkController {
       received = received === 0 ? '' : received;
       return_point = return_point === 0 ? '' : return_point;
       rebate = rebate === 0 ? '' : rebate;
-      console.log('11111');
-      if (searchQuery.interview_date.length > 0) {
-        console.log('222');
-      }
       if (details.length > 0) {
         data.push({
           ...item,

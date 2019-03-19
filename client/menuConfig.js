@@ -59,7 +59,6 @@ const asideMenuConfig = [
     name: '功勋榜',
     path: '/merit',
     icon: 'activity',
-    authority: 'admin',
   },
   {
     name: '客户信息',
