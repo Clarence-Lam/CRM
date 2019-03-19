@@ -45,6 +45,7 @@ module.exports = (router) => {
     .post('/getCustomerForSelect', FormController.getCustomerForSelect)
     // work
     .post('/addWork', WorkController.addWork)
+    .post('/toWork', WorkController.toWork)
     .post('/toIncome', WorkController.toIncome)
     .post('/toLoan', WorkController.toLoan)
     .post('/getWorking', WorkController.getWorking)

@@ -28,6 +28,26 @@ class WorkController {
     });
   }
 
+  async toWork(ctx) {
+    const { customer_id, member_id, mark, isAdd, work_id } = ctx.request.body;
+    const datetime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const uuid = uuidv1();
+    const user_id = ctx.session.userId;
+    const work = new WorkController();
+
+    // let num = (await work.getCustomerNum(customer_id));
+    // if (isAdd) {
+    //   num += 1;
+    // }
+    const post = { id: uuid, customer_id, member_id, user_id, income: null, platform: null, product: null, income_date: null, update_date: datetime, status: 'interview', interview_date: datetime, mark };
+    await work.updateWork(work_id, post);
+    ctx.body = {
+      status: 200,
+      statusText: '操作成功',
+
+    };
+  }
+
   // 设置原有的客户进程为结束
   async setUnworkByCustomer(id, uuid) {
     await Work.setUnworkBycustomer(id, uuid);
@@ -59,7 +79,11 @@ class WorkController {
           const time = searchQuery[prop];
           const startTime = moment(time[0]).format('YYYY-MM-DD 00:00:00');
           const endTime = moment(time[1]).format('YYYY-MM-DD 23:59:59');
-          dateSql += `and ${prop} between '${startTime}' and '${endTime}'`;
+          if (prop === 'interview_date') {
+            _sql += `and ${prop} between '${startTime}' and '${endTime}'`;
+          } else {
+            dateSql += `and ${prop} between '${startTime}' and '${endTime}'`;
+          }
         }
       }
     }
@@ -108,7 +132,11 @@ class WorkController {
       received = received === 0 ? '' : received;
       return_point = return_point === 0 ? '' : return_point;
       rebate = rebate === 0 ? '' : rebate;
-      if (details.length > 0 || (item.status === 'interview' && !dateSql)) {
+      console.log('11111');
+      if (searchQuery.interview_date.length > 0) {
+        console.log('222');
+      }
+      if (details.length > 0) {
         data.push({
           ...item,
           customerName,
@@ -125,6 +153,20 @@ class WorkController {
           phone,
           id_card,
           mark: item.mark || '',
+        });
+      } else {
+        data.push({
+          ...item,
+          customerName,
+          teamName,
+          memberName,
+          lastTime,
+          phone,
+          id_card,
+          mark: item.mark || '',
+          incomeForm: [],
+          platform: [],
+          product: [],
         });
       }
     }

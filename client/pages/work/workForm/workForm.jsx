@@ -85,8 +85,9 @@ export default class WorkForm extends Component {
       let url = '';
       let data = {};
       if (values.status === 'interview') {
-        url = '/api/addWork';
+        url = '/api/toWork';
         data = {
+          work_id: this.props.rowValue.id,
           customer_id: this.props.rowValue.customer_id,
           isAdd: false,
         };
@@ -121,7 +122,9 @@ export default class WorkForm extends Component {
     let ind = {};
     let width = { formLabel: 6, formCol: 18 };
     if (value === 'interview') {
-      ind = {};
+      ind = {
+
+      };
     } else if (value === 'income') {
       ind = {
         income: this.props.rowValue.income || 1,

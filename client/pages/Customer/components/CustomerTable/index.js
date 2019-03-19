@@ -251,14 +251,14 @@ export default class CustomerTable extends Component {
           })}
         </Table> */}
         <Table dataSource={data} hasBorder={false} hasHeader style={{ padding: '20px' }} loading={loading} >
-          <Table.Column dataIndex="name" title="客户名称" key="name" width="175px" lock />
+          <Table.Column dataIndex="name" title="客户名称" key="name" width="120px" lock />
           <Table.Column dataIndex="id_card" title="身份证" key="id_card" width={170} />
           <Table.Column dataIndex="phone" title="联系方式" cell={this.renderPhone} key="phone" width={120} />
           <Table.Column dataIndex="area" title="区域" key="area" width={80} />
           <Table.Column dataIndex="tag" title="标签" key="tag" cell={this.renderTag} width="180px" />
-          <Table.Column dataIndex="team" title="所属组别" key="team" width={100} />
-          <Table.Column dataIndex="member" title="所属组员" key="member" width={100} />
-          <Table.Column dataIndex="create_date" title="创建时间" key="create_date" width={170} cell={this.renderTime} />
+          <Table.Column dataIndex="team" title="组别" key="team" width={80} />
+          <Table.Column dataIndex="member" title="组员" key="member" width={80} />
+          <Table.Column dataIndex="create_date" title="创建时间" key="create_date" width={150} cell={this.renderTime} />
           <Table.Column dataIndex="id" title="操作" cell={this.renderOper} key="id" width="150px" lock="right" />
         </Table>
         <Pagination

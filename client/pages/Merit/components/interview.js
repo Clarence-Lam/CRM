@@ -73,18 +73,20 @@ export default class Interview extends Component {
               <Chart
                 height={window.innerHeight / 2}
                 data={data}
-                padding={[60, 20, 40, 60]}
+                padding={[60, 20, 40, 20]}
                 scale={scale}
                 forceFit
                 placeholder
               >
-                <Axis
+                {/* <Axis
                   name="vote"
                   labels={null}
                   title={null}
                   line={null}
                   tickLine={null}
-                />
+                /> */}
+                <Axis name="vote" label={null} visible={false} />
+                <Axis name="name" />
                 <Geom
                   type="interval"
                   position="name*vote"
@@ -94,7 +96,7 @@ export default class Interview extends Component {
                 <Geom
                   type="point"
                   position="name*vote"
-                  size={60}
+                  size={50}
                   shape={[
                     'index',
                     function (index) {

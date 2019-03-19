@@ -18,10 +18,14 @@ class FormController {
         index: ++index,
       });
     }
+    let rederData = interview;
+    if (interview.length === 3) {
+      rederData = [interview[1] || {}, interview[0] || {}, interview[2] || {}];
+    }
     ctx.body = {
       status: 200,
       statusText: '查询面谈成功',
-      interview,
+      interview: rederData,
       total: total[0].total,
     };
   }
@@ -40,10 +44,14 @@ class FormController {
         index: ++index,
       });
     }
+    let rederData = incomeData;
+    if (incomeData.length === 3) {
+      rederData = [incomeData[1] || {}, incomeData[0] || {}, incomeData[2] || {}];
+    }
     ctx.body = {
       status: 200,
       statusText: '查询面谈成功',
-      incomeData,
+      incomeData: rederData,
       total: total[0].total,
     };
   }
@@ -63,10 +71,14 @@ class FormController {
         index: ++index,
       });
     }
+    let rederData = money;
+    if (money.length === 3) {
+      rederData = [money[1] || {}, money[0] || {}, money[2] || {}];
+    }
     ctx.body = {
       status: 200,
       statusText: '查询面谈成功',
-      money,
+      money: rederData,
       total: total[0].total,
     };
   }
@@ -86,10 +98,14 @@ class FormController {
         index: ++index,
       });
     }
+    let rederData = received;
+    if (received.length === 3) {
+      rederData = [received[1] || {}, received[0] || {}, received[2] || {}];
+    }
     ctx.body = {
       status: 200,
       statusText: '查询面谈成功',
-      received,
+      received: rederData,
       total: total[0].total,
     };
   }
@@ -109,10 +125,14 @@ class FormController {
         index: ++index,
       });
     }
+    let rederData = returnPoint;
+    if (returnPoint.length === 3) {
+      rederData = [returnPoint[1] || {}, returnPoint[0] || {}, returnPoint[2] || {}];
+    }
     ctx.body = {
       status: 200,
       statusText: '查询面谈成功',
-      returnPoint,
+      returnPoint: rederData,
       total: total[0].total,
     };
   }
@@ -132,10 +152,14 @@ class FormController {
         index: ++index,
       });
     }
+    let rederData = rebate;
+    if (rebate.length === 3) {
+      rederData = [rebate[1] || {}, rebate[0] || {}, rebate[2] || {}];
+    }
     ctx.body = {
       status: 200,
       statusText: '查询面谈成功',
-      rebate,
+      rebate: rederData,
       total: total[0].total,
     };
   }

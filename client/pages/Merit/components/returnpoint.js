@@ -78,13 +78,15 @@ export default class returnPoint extends Component {
                 forceFit
                 placeholder
               >
-                <Axis
+                {/* <Axis
                   name="vote"
                   labels={null}
                   title={null}
                   line={null}
                   tickLine={null}
-                />
+                /> */}
+                <Axis name="vote" label={null} visible={false} />
+                <Axis name="name" />
                 <Geom
                   type="interval"
                   position="name*vote"
