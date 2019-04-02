@@ -78,9 +78,9 @@ export default class workTable extends Component {
       <div style={{ margin: '20px' }}>请返回重新选择进程</div>);
   }
 
-  async componentWillMount() {
-    console.log('1');
-  }
+  // async componentWillMount() {
+  //   console.log('');
+  // }
   render() {
     return (
       <div>

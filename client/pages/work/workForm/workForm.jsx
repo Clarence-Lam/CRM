@@ -34,6 +34,7 @@ export default class WorkForm extends Component {
         formLabel: 6,
         formCol: 18,
       },
+      incomeForm: [{}],
     };
   }
   static defaultProps = {
@@ -46,8 +47,6 @@ export default class WorkForm extends Component {
 
 
   onClose = reason => {
-    console.log(reason);
-
     const { closeDialog } = this.props;
     closeDialog();
   };
@@ -96,6 +95,7 @@ export default class WorkForm extends Component {
         data = {
           work_id: this.props.rowValue.id,
           interview_date: this.props.rowValue.interview_date,
+          customer_id: this.props.rowValue.customer_id,
         };
       } else if (values.status === 'loan') {
         url = '/api/toLoan';
@@ -128,12 +128,12 @@ export default class WorkForm extends Component {
     } else if (value === 'income') {
       ind = {
         income: this.props.rowValue.income || 1,
-        incomeForm: this.props.rowValue.incomeForm.length > 0 ? this.props.rowValue.incomeForm : [{}],
+        incomeForm: this.state.incomeForm.length > 0 ? this.state.incomeForm : [{}],
       };
     } else if (value === 'loan') {
       ind = {
         income: this.props.rowValue.income || 1,
-        incomeForm: this.props.rowValue.incomeForm.length > 0 ? this.props.rowValue.incomeForm : [{}],
+        incomeForm: this.state.incomeForm.length > 0 ? this.state.incomeForm : [{}],
       };
       width = {
         formLabel: 3,
@@ -147,6 +147,7 @@ export default class WorkForm extends Component {
         member_id: this.props.rowValue.member_id,
         mark: this.props.rowValue.mark,
         ...ind,
+        num: this.props.rowValue.num,
       },
       formWidth: {
         ...width,
@@ -170,14 +171,19 @@ export default class WorkForm extends Component {
     });
   }
 
-  async componentWillMount() {
-    console.log('reder前');
-  }
+  // async componentWillMount() {
+  //   console.log('reder前');
+  // }
 
-  componentWillReceiveProps(nextProps) {
+  async componentWillReceiveProps(nextProps) {
     let width = { formLabel: 6, formCol: 18 };
     if (nextProps.rowValue.status === 'loan') {
       width = { formLabel: 3, formCol: 5 };
+    }
+    let incomeForm = nextProps.rowValue.incomeForm;
+    if (nextProps.rowValue.status === 'loan' || nextProps.rowValue.status === 'income') {
+      const res = await axios.post('/api/getIncomeForm', { id: nextProps.rowValue.id });
+      incomeForm = res.data.incomeForm;
     }
     this.setState({
       formValue: {
@@ -185,12 +191,14 @@ export default class WorkForm extends Component {
         customer_name: nextProps.rowValue.customerName,
         member_id: nextProps.rowValue.member_id,
         mark: nextProps.rowValue.mark,
-        incomeForm: nextProps.rowValue.incomeForm,
+        incomeForm,
         income: nextProps.rowValue.income,
+        num: nextProps.rowValue.num,
       },
       formWidth: {
         ...width,
       },
+      incomeForm,
     });
   }
 

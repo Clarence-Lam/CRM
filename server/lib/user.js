@@ -17,12 +17,13 @@ exports.selectTest = (value) => {
 };
 
 exports.getUser = () => {
-  const sql = 'SELECT*FROM USER WHERE username !=\'admin\'';
+  const sql = 'SELECT*FROM USER WHERE username !=\'admin\' and isDelete="0"';
   return query(sql);
 };
 
 exports.deleteUser = (value) => {
-  const sql = 'DELETE FROM `USER` WHERE id =?';
+  // const sql = 'DELETE FROM `USER` WHERE id =?';
+  const sql = 'UPDATE USER SET isDelete = "1" WHERE id =?';
   return query(sql, value);
 };
 

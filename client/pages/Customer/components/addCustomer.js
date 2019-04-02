@@ -64,11 +64,13 @@ export default class AddCustomer extends Component {
             Toast.success(response.data.statusText);
             const customerId = response.data.row.id;
             const customerName = response.data.row.name;
+            const member_id = response.data.row.member_id;
             this.props.history.push({
               pathname: `/add/work/${customerId}`,
               state: {
                 customerId,
                 customerName,
+                member_id,
               },
             });
           } else if (response.data.status === 202) {
@@ -117,16 +119,24 @@ export default class AddCustomer extends Component {
       tagData,
     });
   }
+  getUsers = async () => {
+    let { users } = this.state;
+    const res = await axios.get('/api/getUsers', {});
+    users = res.data.users;
+    this.setState({
+      users,
+    });
+  }
   getCustomerById = async () => {
     if (this.props.location.state) {
       await axios.post('/api/getCustomerById', { id: this.props.location.state.id })
         .then((response) => {
-          const { id, name, id_card, phone, member_id, area, tag, mark } = response.data.customer[0];
+          const { id, name, id_card, phone, member_id, area, tag, mark, user_id } = response.data.customer[0];
           const areaNum = area.split(',');
           const tagData = tag.split(',');
           this.setState({
             formValue: {
-              id, name, id_card, phone, member_id, area: areaNum[1], tag: tagData, mark: mark || '',
+              id, name, id_card, phone, member_id, area: areaNum[1], tag: tagData, mark: mark || '', user_id,
             },
             area: [areaNum[0], areaNum[1]],
             title: '修改客户信息',
@@ -142,10 +152,11 @@ export default class AddCustomer extends Component {
   async componentWillMount() {
     this.getTag();
     this.getTeamMember();
+    await this.getUsers();
     this.getCustomerById();
   }
   render() {
-    const { TeamMember, tagData, title } = this.state;
+    const { TeamMember, tagData, title, users } = this.state;
 
     return (
       <IceContainer style={styles.form}>
@@ -257,6 +268,19 @@ export default class AddCustomer extends Component {
                 </div>
               </Col>
             </Row>
+            {
+              global.user && global.user.authority === 'admin' &&
+              <Row style={styles.formRow}>
+                <Col l="2" style={styles.formLabel}>
+                  <span>所属用户：</span>
+                </Col>
+                <Col l="6">
+                  <FormBinder name="user_id">
+                    <Select dataSource={users} style={{ width: '100%' }} />
+                  </FormBinder>
+                </Col>
+              </Row>
+            }
             <Row style={styles.formRow}>
               <Col l="2" style={styles.formLabel}>
                 <span>备注：</span>

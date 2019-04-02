@@ -9,6 +9,7 @@ import { withRouter } from 'react-router-dom';
 import ContainerTitle from '../../../../components/ContainerTitle';
 import SearchFilter from '../searchForm/SearchFilter';
 import axios from 'axios';
+import { async } from 'q';
 
 const defaultSearchQuery = {
   // id: '',
@@ -41,6 +42,7 @@ export default class CustomerTable extends Component {
       pageIndex: 1,
       total: 0,
       // dataSource: [],
+      expoetLoading: false,
     };
   }
 
@@ -87,6 +89,7 @@ export default class CustomerTable extends Component {
         this.setState({
           loading: false,
         });
+        this.getCustomer();
       })
       .catch((error) => {
         console.log(error);
@@ -119,7 +122,7 @@ export default class CustomerTable extends Component {
   }
 
   renderOper = (value, index, row) => {
-    if (global.user.authority === 'admin') {
+    if (global.user && global.user.authority === 'admin') {
       return (
         <div>
           <Button
@@ -153,7 +156,7 @@ export default class CustomerTable extends Component {
   };
   renderPhone = (value) => {
     let authority = '';
-    if (global.user.authority) {
+    if (global.user && global.user.authority) {
       authority = global.user.authority;
     }
     if (authority === 'admin') {
@@ -213,12 +216,27 @@ export default class CustomerTable extends Component {
     });
     this.getCustomer();
   };
+  onExport =async () => {
+    this.setState({
+      expoetLoading: true,
+    });
+    const searchQuery = this.state.searchQuery;
+    axios.post('/api/exportCustomer', { searchQuery })
+      .then((res) => { // 处理返回的文件流
+        this.setState({
+          expoetLoading: false,
+        });
+        if (res.data.status === 200) {
+          window.location.href = res.data.url;
+        }
+      });
+  };
   async componentWillMount() {
     this.getCustomer();
   }
   render() {
     const { enableFilter } = this.props;
-    const { data, searchQuery, loading, pageIndex, total } = this.state;
+    const { data, searchQuery, loading, pageIndex, total, expoetLoading } = this.state;
     return (
       <IceContainer style={styles.container}>
         <ContainerTitle
@@ -233,6 +251,8 @@ export default class CustomerTable extends Component {
             onChange={this.onSeacrhChange}
             onSubmit={this.onSearchSubmit}
             onReset={this.onSearchReset}
+            onExport={this.onExport}
+            expoetLoading={expoetLoading}
           />
         )}
         {/* <Table dataSource={data} hasBorder={false} loading={loading} style={{ padding: '20px' }}>

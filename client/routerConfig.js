@@ -4,6 +4,7 @@
 
 import UserLogin from './pages/UserLogin';
 import UserRegister from './pages/UserRegister';
+import Setting from './pages/Setting';
 // -----
 import Merit from './pages/Merit';
 import Customer from './pages/Customer';
@@ -24,6 +25,10 @@ const routerConfig = [
   {
     path: '/user/register',
     component: UserRegister,
+  },
+  {
+    path: '/setting',
+    component: Setting,
   },
   // --
   {

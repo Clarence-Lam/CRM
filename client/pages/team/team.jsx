@@ -67,11 +67,19 @@ export default class TeamTable extends Component {
       title: '提示',
       content: '确认删除吗',
       onOk: () => {
-        const { data } = this.state;
-
-        data.splice(index, index + 1);
-        this.setState({
-          data,
+        axios.post('/api/deleteTeam', { id: index }).then((response) => {
+          if (response.data.status === 200) {
+            Message.success(response.data.statusText);
+            this.setState({
+              visible: false,
+            });
+            this.getData();
+          } else if (response.data.status === 201) {
+            Message.warning(response.data.statusText);
+            this.setState({
+              visible: false,
+            });
+          }
         });
       },
     });
@@ -116,13 +124,13 @@ export default class TeamTable extends Component {
         >
           修改
         </Button>
-        {/* <Button
+        <Button
           onClick={() => this.handleDelete(value)}
           type="normal"
           warning
         >
           删除
-        </Button> */}
+        </Button>
       </div>
     );
   };

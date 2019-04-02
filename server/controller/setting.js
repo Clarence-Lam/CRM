@@ -127,6 +127,27 @@ class TeamController {
       };
     });
   }
+  async deleteTeam(ctx) {
+    const { id } = ctx.request.body;
+    const member = await Setting.getMemberByTeamId([id]);
+    await Setting.formatSql([id]);
+    console.log(member);
+    console.log(member.length);
+    if (member.length === 0) {
+      await Setting.deleteTeam([id]).then(result => {
+        ctx.body = {
+          status: 200,
+          statusText: '组别成功删除',
+          team: result,
+        };
+      });
+    } else {
+      ctx.body = {
+        status: 201,
+        statusText: '当前组别存在组员，请先删除组员或修改组员归属。',
+      };
+    }
+  }
 }
 
 module.exports = new TeamController();

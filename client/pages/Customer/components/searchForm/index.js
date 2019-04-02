@@ -31,6 +31,7 @@ class searchForm extends Component {
     handleSubmit: PropTypes.func,
     formChange: PropTypes.func,
     handleReset: PropTypes.func,
+    handleExport: PropTypes.func,
     extraContent: PropTypes.element,
   };
 
@@ -39,6 +40,7 @@ class searchForm extends Component {
     handleReset: () => {},
     handleSubmit: () => {},
     formChange: () => {},
+    handleExport: () => {},
   };
 
   formChange = (value) => {
@@ -175,7 +177,7 @@ class searchForm extends Component {
   }
 
   render() {
-    const { value, config, extraContent, handleReset } = this.props;
+    const { value, config, extraContent, handleReset, handleExport, expoetLoading } = this.props;
 
     return (
       <div style={styles.formContainer}>
@@ -199,6 +201,12 @@ class searchForm extends Component {
               <Button type="normal" onClick={handleReset}>
                 重 置
               </Button>
+              {
+                global.user && global.user.authority === 'admin' &&
+                <Button type="secondary" onClick={handleExport} style={{ marginLeft: '10px' }} loading={expoetLoading}>
+                导 出
+                </Button>
+              }
             </div>
             {extraContent}
           </div>

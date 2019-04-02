@@ -25,7 +25,7 @@ const sessionMysqlConfig = {
 };
 
 // 定义允许直接访问的url
-const allowpage = ['/', '/css/index.css', '/js/index.js', '/login', '/api/login', '/api/register'];
+const allowpage = ['/', '/css/index.css', '/js/index.js', '/login', '/api/login', '/api/register', '/assets/0d93a56513016e7ce298a268f2602fa5.jpg'];
 // 拦截
 function localFilter(ctx, next) {
   // console.log(ctx.session);
@@ -57,7 +57,7 @@ app
       path: '/', // 写 cookie 所在的路径
       maxAge: 1000 * 60 * 60 * 0.5, // cookie 有效时长
       httpOnly: true, // 是否只用于 http 请求中获取
-      overwrite: false, // 是否允许重写
+      overwrite: true, // 是否允许重写
     },
     store: new MysqlStore(sessionMysqlConfig),
   }))
@@ -67,6 +67,7 @@ app
   })
   .use(router.routes())
   .use(router.allowedMethods())
+  .use(serve(path.join(process.cwd(), 'downloads')))
   .use(serve(path.join(process.cwd(), 'build')))
   // .use(session({
   //   key: 'USER_SID',

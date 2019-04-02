@@ -65,10 +65,12 @@ export default class AddCustomer extends Component {
           if (this.props.location.state) {
             const { formValue } = this.setState;
             const customer_id = this.props.location.state.customerId;
+            const member_id = this.props.location.state.member_id;
             // const customerName = this.props.location.state.customerName;
             this.setState({
               formValue: {
                 customer_id,
+                member_id,
               },
             });
           }
@@ -91,6 +93,14 @@ export default class AddCustomer extends Component {
       TeamMember,
     });
   };
+  changeCustomer = async (value, actionType, item) => {
+    const { member_id } = item;
+    const { formValue } = this.state;
+    formValue.member_id = member_id;
+    this.setState({
+      formValue,
+    });
+  };
 
   async componentWillMount() {
     await this.getTeamMember();
@@ -108,14 +118,14 @@ export default class AddCustomer extends Component {
           onChange={this.formChange}
         >
           <div style={styles.formContent}>
-            <h2 style={styles.formTitle}>新增进程</h2>
+            <h2 style={styles.formTitle}>新增进程（面谈）</h2>
             <Row style={styles.formRow}>
               <Col l="2" style={styles.formLabel}>
                 <span>客户称谓：</span>
               </Col>
               <Col l="6">
                 <FormBinder name="customer_id" required message="请选择客户">
-                  <Select showSearch placeholder="请选择客户" filterLocal={false} dataSource={this.state.customerData} onSearch={this.searchCustomer} style={{ width: '100%' }} />
+                  <Select showSearch placeholder="请选择客户" filterLocal={false} dataSource={this.state.customerData} onSearch={this.searchCustomer} style={{ width: '100%' }} onChange={this.changeCustomer} />
                 </FormBinder>
                 <div style={styles.formErrorWrapper}>
                   <FormError name="customer_id" />
@@ -129,7 +139,7 @@ export default class AddCustomer extends Component {
               </Col>
               <Col l="6">
                 <FormBinder name="member_id" required message="请选择组别组员">
-                  <CascaderSelect placeholder="组别组员" dataSource={TeamMember} style={{ width: '100%' }} listStyle={{ width: '150px' }} />
+                  <CascaderSelect disabled placeholder="组别组员" dataSource={TeamMember} style={{ width: '100%' }} listStyle={{ width: '150px' }} />
                 </FormBinder>
                 <div style={styles.formErrorWrapper}>
                   <FormError name="member_id" />

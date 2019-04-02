@@ -30,6 +30,10 @@ exports.getMemberbyId = (value) => {
   const sql = 'SELECT*FROM member where id = ?';
   return query(sql, value);
 };
+exports.getUser = (value) => {
+  const sql = 'SELECT*FROM user where isDelete = "0"';
+  return query(sql, value);
+};
 
 // exports.getMemberById = (value) => {
 //   const sql = 'SELECT*FROM member';

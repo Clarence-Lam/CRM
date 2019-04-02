@@ -32,6 +32,7 @@ export default class income extends Component {
           name: 1,
         }],
       },
+      disabledShow: true,
     };
   }
   static defaultProps = {
@@ -91,11 +92,18 @@ export default class income extends Component {
     });
   }
   //-------------------
-
+  isAdmin = async () => {
+    if (global.user && global.user.authority === 'admin') {
+      this.setState({
+        disabledShow: false,
+      });
+    }
+  }
 
   async componentWillMount() {
     await this.getTeamMember();
     // await this.getCustomerForSelect();
+    await this.isAdmin();
   }
   render() {
     const { visible, rowValue } = this.props;
@@ -120,13 +128,26 @@ export default class income extends Component {
           </Col>
           <Col span="18">
             <FormBinder name="member_id" required message="请选择组别组员">
-              <CascaderSelect disabled placeholder="组别组员" dataSource={this.state.TeamMember} style={{ width: '200px' }} listStyle={{ width: '150px' }} />
+              <CascaderSelect disabled={this.state.disabledShow} placeholder="组别组员" dataSource={this.state.TeamMember} style={{ width: '200px' }} listStyle={{ width: '150px' }} />
             </FormBinder>
             <div style={styles.formErrorWrapper}>
               <FormError name="member_id" />
             </div>
           </Col>
         </Row>
+        {
+          global.user && global.user.authority === 'admin' &&
+          <Row style={styles.formRow}>
+            <Col span="6" style={styles.formLabel}>
+              <span>进程量：</span>
+            </Col>
+            <Col span="18">
+              <FormBinder name="num" message="请输入进程量" required type="number">
+                <NumberPicker min={1} style={{ width: '200px' }} />
+              </FormBinder>
+            </Col>
+          </Row>
+        }
         <Row style={styles.formRow}>
           <Col span="6" style={styles.formLabel}>
             <span>进件数：</span>

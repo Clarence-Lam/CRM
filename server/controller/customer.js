@@ -132,7 +132,7 @@ class CustyomerController {
   }
 
   async updateCustomer(ctx) {
-    const { id, name, id_card, phone, member_id, mark, tag } = ctx.request.body;
+    const { id, name, id_card, phone, member_id, mark, tag, user_id } = ctx.request.body;
     let { area } = ctx.request.body;
 
     const results = await CustomerModel.getCustomerByIdcard(id_card);
@@ -152,7 +152,7 @@ class CustyomerController {
           tagData += (`,${tag[i]}`);
         }
       }
-      const post = { name, id_card, phone, member_id, area, tag: tagData, mark, update_date: datetime };
+      const post = { name, id_card, phone, member_id, area, tag: tagData, mark, update_date: datetime, user_id };
       await CustomerModel.updateCustomer(post, id).then(result => {
         ctx.body = {
           status: 202,

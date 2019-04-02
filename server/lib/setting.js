@@ -65,8 +65,17 @@ exports.deleteTag = (value) => {
   const sql = 'UPDATE tag SET isDelete = "1" WHERE id =?';
   return query(sql, value);
 };
+exports.getMemberByTeamId = (value) => {
+  const sql = 'select * from member WHERE team_id =? and isDelete = "0"';
+  return query(sql, value);
+};
+exports.deleteTeam = (value) => {
+  const sql = 'UPDATE team SET isDelete = "1" WHERE id =?';
+  return query(sql, value);
+};
 
-exports.formatSql = (sql, value) => {
+exports.formatSql = (value) => {
+  const sql = 'select * from member WHERE id =? and isDelete = "0"';
   return format(sql, value);
 };
 

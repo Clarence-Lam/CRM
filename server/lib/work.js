@@ -18,7 +18,8 @@ exports.getCustomerNum = (values) => {
 };
 
 exports.getWork = (values, limit) => {
-  const sql = `select * from work where isWork = "0" ${values} order by create_date desc, id desc limit ${limit[0]}, ${limit[1]}`;
+  // const sql = `select * from work where isWork = "0" ${values} order by update_date desc, id desc limit ${limit[0]}, ${limit[1]}`;
+  const sql = `select * from work where isWork = "0" ${values} order by update_date desc, id desc`;
   return query(sql);
 };
 
@@ -29,6 +30,16 @@ exports.getWorkTotal = (values) => {
 
 exports.getDetailByWorkid = (values, dateSql) => {
   const sql = `select * from workDetail where isWork = "0" and work_id = ? ${dateSql}`;
+  return query(sql, values);
+};
+// 按照客户id查找历史
+exports.getDetailByCustomerid = (values, historySql) => {
+  const sql = `select * from workDetail where isWork = "0" and customer_id = ? ${historySql}`;
+  return query(sql, values);
+};
+// 按照workID并interview_date查找work
+exports.getWorkbyInterview = (values, historySql) => {
+  const sql = `select * from work where id = ? ${historySql}`;
   return query(sql, values);
 };
 
@@ -62,7 +73,7 @@ exports.getDetailbyId = (id) => {
   return query(sql, id);
 };
 
-exports.formatSql = (_sql, limit) => {
-  const sql = `select * from work where isWork = "0" ${_sql} order by create_date desc, id desc limit ${limit[0]}, ${limit[1]}`;
-  return format(sql);
+exports.formatSql = (id, values) => {
+  const sql = `update workDetail set ? where id = '${id}' `;
+  return format(sql, values);
 };

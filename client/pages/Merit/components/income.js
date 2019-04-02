@@ -50,6 +50,11 @@ export default class income extends Component {
         min: 0,
       },
     };
+    const color = {
+      2: '#7f8da9',
+      1: '#fec514',
+      3: '#db4c3c',
+    };
     const { data, total } = this.state;
     return (
       <IceContainer>
@@ -68,9 +73,9 @@ export default class income extends Component {
           <Row style={styles.formItem}>
             <Col span="24" style={styles.label}>
               <Chart
-                height={window.innerHeight / 2}
+                height={window.innerHeight / 4}
                 data={data}
-                padding={[60, 20, 40, 60]}
+                padding={[60, 20, 20, 60]}
                 scale={scale}
                 forceFit
                 placeholder
@@ -87,7 +92,15 @@ export default class income extends Component {
                 <Geom
                   type="interval"
                   position="name*vote"
-                  color={['name', ['#1890FF', '#13C2C2', '#2FC25B', '#daf0fd']]}
+                  color={['index', function (index) {
+                    return color[index];
+                  }]}
+                  tooltip={['name*vote', (name, vote) => {
+                    return {
+                      name: '数量',
+                      value: `${vote}`,
+                    };
+                  }]}
                 />
                 <Tooltip />
                 <Geom
@@ -100,6 +113,7 @@ export default class income extends Component {
                       return ['image', imageMap[index]];
                     },
                   ]}
+                  tooltip={false}
                 />
               </Chart>
             </Col>

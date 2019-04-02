@@ -19,6 +19,23 @@ class FormController {
       };
     });
   }
+  async getUsers(ctx) {
+    await Form.getUser().then(result => {
+      const data = [];
+      result.map((item) => {
+        data.push({
+          value: item.id,
+          label: item.name,
+        });
+        return item;
+      });
+      ctx.body = {
+        status: 200,
+        statusText: '查询用户成功',
+        users: data,
+      };
+    });
+  }
 
   async getTeamMember(ctx) {
     const team = await Setting.getTeam().then(result => { return result; });
@@ -97,9 +114,6 @@ class FormController {
   async getCustomerForSelect(ctx) {
     const { id, name } = ctx.request.body;
     const { authority, userId } = ctx.session;
-    console.log(`id:${id}`);
-    console.log(`authority:${authority}`);
-    console.log(`userId:${userId}`);
     let sql = '';
     if (authority === 'guest') {
       sql += `and user_id = "${userId}"`;
@@ -116,6 +130,7 @@ class FormController {
         customer.push({
           value: item.id,
           label: item.name,
+          member_id: item.member_id,
         });
       }
       ctx.body = {

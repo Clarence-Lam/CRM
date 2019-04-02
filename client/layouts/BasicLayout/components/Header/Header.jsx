@@ -188,10 +188,10 @@ export default class Header extends Component {
                     设置
                   </Link>
                 </li>
-                <li className="user-profile-menu-item" onClick={this.getUserProfile}>
+                {/* <li className="user-profile-menu-item" onClick={this.getUserProfile}>
                   <FoundationSymbol type="home2" size="small" />
                   用户信息
-                </li>
+                </li> */}
                 <li className="user-profile-menu-item" onClick={this.logout}>
                   {/* <Link to="/user/login"> */}
                   <FoundationSymbol type="compass" size="small" />

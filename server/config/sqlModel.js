@@ -145,6 +145,7 @@ const creatWorkDetail =
     id VARCHAR(255),
     work_id VARCHAR(255),
     member_id VARCHAR(255),
+    customer_id VARCHAR(255),
     status VARCHAR(255),
     income INT,
     platform VARCHAR(255),

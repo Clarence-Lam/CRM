@@ -265,7 +265,7 @@ export default class searchWork extends Component {
   }
 
   render() {
-    const { value, onChange, onReset } = this.props;
+    const { value, onChange, onReset, onExport, expoetLoading } = this.props;
     const { showAdvancedFields } = this.state;
 
     const config = showAdvancedFields ? this.formConfig : (
@@ -280,6 +280,8 @@ export default class searchWork extends Component {
         handleSubmit={this.handleSubmit}
         handleReset={onReset}
         extraContent={this.renderExtraContent()}
+        handleExport={onExport}
+        expoetLoading={expoetLoading}
       />
     );
   }

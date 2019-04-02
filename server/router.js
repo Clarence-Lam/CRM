@@ -4,6 +4,7 @@ const customerController = require('./controller/customer');
 const FormController = require('./controller/form');
 const WorkController = require('./controller/working');
 const Merit = require('./controller/merit');
+const ExportExcel = require('./controller/ExportExcel');
 
 module.exports = (router) => {
   // 查看登录信息
@@ -33,6 +34,7 @@ module.exports = (router) => {
     .post('/addTag', settingController.addTag)
     .post('/updateTag', settingController.updateTag)
     .post('/deleteTag', settingController.deleteTag)
+    .post('/deleteTeam', settingController.deleteTeam)
     // customer
     .post('/getCustomer', customerController.getCustomer)
     .post('/getCustomerById', customerController.getCustomerById)
@@ -42,6 +44,7 @@ module.exports = (router) => {
     // form
     .get('/getTeamMember', FormController.getTeamMember)
     .get('/getTagForSelect', FormController.getTagForSelect)
+    .get('/getUsers', FormController.getUsers)
     .post('/getCustomerForSelect', FormController.getCustomerForSelect)
     // work
     .post('/addWork', WorkController.addWork)
@@ -50,11 +53,16 @@ module.exports = (router) => {
     .post('/toLoan', WorkController.toLoan)
     .post('/getWorking', WorkController.getWorking)
     .post('/getWorkDetail', WorkController.getWorkDetail)
+    .post('/getIncomeForm', WorkController.getIncomeForm)
+    .post('/changeDetail', WorkController.changeDetail)
     // merit
     .get('/getInterview', Merit.getInterview)
     .get('/getIncome', Merit.getIncome)
     .get('/getMoney', Merit.getMoney)
     .get('/getReceived', Merit.getReceived)
     .get('/getReturnPoint', Merit.getReturnPoint)
-    .get('/getRebate', Merit.getRebate);
+    .get('/getRebate', Merit.getRebate)
+    // export excel
+    .post('/exportCustomer', ExportExcel.exportCustomer)
+    .post('/exportWork', ExportExcel.exportWork);
 };

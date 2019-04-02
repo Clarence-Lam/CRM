@@ -41,6 +41,7 @@ export default class workTable extends Component {
     searchQuery: cloneDeep(defaultSearchQuery),
     pageIndex: 1,
     total: 0,
+    expoetLoading: false,
   };
 
   addWork = () => {
@@ -119,13 +120,15 @@ export default class workTable extends Component {
 
   renderPlatformProduct = (value, index, row) => {
     let s = '';
-    value.forEach((item, key) => {
-      if (key === 0) {
-        s += item;
-      } else {
-        s += `,${item}`;
-      }
-    });
+    if (value) {
+      value.forEach((item, key) => {
+        if (key === 0) {
+          s += item;
+        } else {
+          s += `,${item}`;
+        }
+      });
+    }
     return (
       <div>
         {s}
@@ -150,8 +153,6 @@ export default class workTable extends Component {
   };
 
   getDetail = (value, row) => {
-    console.log(value);
-    console.log(row);
     this.props.history.push({
       pathname: `/workDetail/${value}`,
       state: {
@@ -174,6 +175,28 @@ export default class workTable extends Component {
       this.getWorking
       // console.log(this.state)
     );
+  };
+  onExport =async () => {
+    this.setState({
+      expoetLoading: true,
+    });
+    const searchQuery = this.state.searchQuery;
+    axios.post('/api/exportWork', { searchQuery })
+      .then((res) => { // 处理返回的文件流
+        this.setState({
+          expoetLoading: false,
+        });
+        if (res.data.status === 200) {
+          window.location.href = res.data.url;
+        } else if (res.data.status === 403) {
+          Message.success('登陆超时，请重新登陆');
+          history.push('/#/user/login');
+          location.reload();
+        }
+      }).catch(err => {
+        console.log(err);
+        // Message.warning('网络异常，请稍后再试');
+      });
   };
 
   TableColumns = [
@@ -280,7 +303,7 @@ export default class workTable extends Component {
     this.getWorking();
   }
   render() {
-    const { dataSource, loading, visible, rowValue, searchQuery, pageIndex, total } = this.state;
+    const { dataSource, loading, visible, rowValue, searchQuery, pageIndex, total, expoetLoading } = this.state;
     return (
       <div>
         <IceContainer style={styles.container}>
@@ -295,6 +318,8 @@ export default class workTable extends Component {
             onChange={this.onSeacrhChange}
             onSubmit={this.onSearchSubmit}
             onReset={this.onSearchReset}
+            expoetLoading={expoetLoading}
+            onExport={this.onExport}
           />
           <Table dataSource={dataSource} hasBorder={false} loading={loading} style={{ padding: '20px' }}>
             {this.TableColumns.map((item) => {

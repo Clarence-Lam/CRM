@@ -25,6 +25,7 @@ export default class loan extends Component {
     super(props);
     this.state = {
       TeamMember: [],
+      disabledShow: true,
     };
   }
   static defaultProps = {
@@ -51,15 +52,21 @@ export default class loan extends Component {
       removeForm();
     }
   }
-
+  isAdmin = async () => {
+    if (global.user && global.user.authority === 'admin') {
+      this.setState({
+        disabledShow: false,
+      });
+    }
+  }
 
   async componentWillMount() {
     await this.getTeamMember();
     // await this.getCustomerForSelect();
+    await this.isAdmin();
   }
   render() {
     const { visible, rowValue } = this.props;
-    console.log(this.props);
     return (
       <div>
         <Row style={styles.formRow}>
@@ -79,7 +86,7 @@ export default class loan extends Component {
           </Col>
           <Col span="5">
             <FormBinder name="member_id" required message="请选择组别组员">
-              <CascaderSelect disabled placeholder="组别组员" dataSource={this.state.TeamMember} style={{ width: '200px' }} listStyle={{ width: '150px' }} />
+              <CascaderSelect disabled={this.state.disabledShow} placeholder="组别组员" dataSource={this.state.TeamMember} style={{ width: '200px' }} listStyle={{ width: '150px' }} />
             </FormBinder>
             <div style={styles.formErrorWrapper}>
               <FormError name="member_id" />
@@ -97,6 +104,19 @@ export default class loan extends Component {
             </div>
           </Col>
         </Row>
+        {
+          global.user && global.user.authority === 'admin' &&
+          <Row style={styles.formRow}>
+            <Col span="3" style={styles.formLabel}>
+              <span>进程量：</span>
+            </Col>
+            <Col span="5">
+              <FormBinder name="num" message="请输入进程量" required type="number">
+                <NumberPicker min={1} style={{ width: '97%' }} />
+              </FormBinder>
+            </Col>
+          </Row>
+        }
         <LoanList
           items={this.props.formValue.incomeForm}
           addItem={this.addItem}
@@ -132,7 +152,7 @@ class LoanList extends Component {
                 </Col>
                 <Col span="5">
                   <FormBinder required message="请输入平台名称" name={`incomeForm[${index}].platform`} >
-                    <Input disabled />
+                    <Input disabled={this.props.disabledShow} />
                   </FormBinder>
                   <div style={styles.formErrorWrapper}>
                     <FormError name={`incomeForm[${index}].platform`} style={styles.formError} />
@@ -144,7 +164,7 @@ class LoanList extends Component {
                 </Col>
                 <Col span="5">
                   <FormBinder name={`incomeForm[${index}].product`} required message="请输入产品名称" >
-                    <Input disabled />
+                    <Input disabled={this.props.disabledShow} />
                   </FormBinder>
                   <div style={styles.formErrorWrapper}>
                     <FormError name={`incomeForm[${index}].product`} style={styles.formError} />

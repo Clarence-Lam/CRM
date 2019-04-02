@@ -14,12 +14,14 @@ export default class SearchFilter extends Component {
     onChange: PropTypes.func,
     onSubmit: PropTypes.func,
     onReset: PropTypes.func,
+    onExport: PropTypes.func,
   };
 
   static defaultProps = {
     onChange: () => {},
     onSubmit: () => {},
     onReset: () => {},
+    onExport: () => {},
   }
 
   state = {
@@ -39,6 +41,7 @@ export default class SearchFilter extends Component {
 
     this.props.onSubmit(value);
   };
+
 
   /**
    * 高级搜索
@@ -234,7 +237,7 @@ export default class SearchFilter extends Component {
   }
 
   render() {
-    const { value, onChange, onReset } = this.props;
+    const { value, onChange, onReset, onExport, expoetLoading } = this.props;
     const { showAdvancedFields } = this.state;
 
     const config = showAdvancedFields ? this.formConfig : (
@@ -249,6 +252,8 @@ export default class SearchFilter extends Component {
         handleSubmit={this.handleSubmit}
         handleReset={onReset}
         extraContent={this.renderExtraContent()}
+        handleExport={onExport}
+        expoetLoading={expoetLoading}
       />
     );
   }
