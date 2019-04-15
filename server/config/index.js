@@ -2,7 +2,7 @@ const config = {
   database: {
     DATABASE: 'CRM',
     USERNAME: 'root',
-    PASSWORD: 'LJie88665482',
+    PASSWORD: 'root',
     PORT: '3306',
     HOST: 'localhost',
     timezone: 'Asia/Shanghai',
