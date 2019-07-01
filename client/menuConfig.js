@@ -77,6 +77,11 @@ const asideMenuConfig = [
     authority: 'admin', // 一级导航权限配置
     children: [
       {
+        name: '统计报表', // 二级导航名称
+        path: '/reports', // 二级导航路径
+        authority: 'admin', // 二级导航权限配置
+      },
+      {
         name: '组别管理', // 二级导航名称
         path: '/team', // 二级导航路径
         authority: 'admin', // 二级导航权限配置

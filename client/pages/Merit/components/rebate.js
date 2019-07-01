@@ -78,7 +78,7 @@ export default class rebate extends Component {
               <Chart
                 height={window.innerHeight / 4}
                 data={data}
-                padding={[60, 20, 20, 60]}
+                padding={[60, 20, 30, 60]}
                 scale={scale}
                 forceFit
                 placeholder

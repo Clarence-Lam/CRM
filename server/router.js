@@ -5,6 +5,7 @@ const FormController = require('./controller/form');
 const WorkController = require('./controller/working');
 const Merit = require('./controller/merit');
 const ExportExcel = require('./controller/ExportExcel');
+const Reports = require('./controller/Reports');
 
 module.exports = (router) => {
   // 查看登录信息
@@ -62,6 +63,9 @@ module.exports = (router) => {
     .get('/getReceived', Merit.getReceived)
     .get('/getReturnPoint', Merit.getReturnPoint)
     .get('/getRebate', Merit.getRebate)
+    // reports
+    .post('/getMoneyReport', Reports.getMoneyReport)
+    .post('/getReturnReport', Reports.getMoneyReport)
     // export excel
     .post('/exportCustomer', ExportExcel.exportCustomer)
     .post('/exportWork', ExportExcel.exportWork);

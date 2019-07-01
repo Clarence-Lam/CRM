@@ -78,7 +78,7 @@ export default class Interview extends Component {
               <Chart
                 height={window.innerHeight / 4}
                 data={data}
-                padding={[60, 20, 20, 20]}
+                padding={[60, 20, 30, 20]}
                 scale={scale}
                 forceFit
                 placeholder

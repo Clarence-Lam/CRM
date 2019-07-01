@@ -74,6 +74,11 @@ exports.deleteTeam = (value) => {
   return query(sql, value);
 };
 
+exports.updateTeamNameInMember = (teamName, id) => {
+  const sql = `UPDATE member SET team_name = "${teamName}" WHERE team_id ="${id}"`;
+  return query(sql);
+};
+
 exports.formatSql = (value) => {
   const sql = 'select * from member WHERE id =? and isDelete = "0"';
   return format(sql, value);

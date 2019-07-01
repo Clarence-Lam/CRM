@@ -236,7 +236,12 @@ class WorkController {
         }
       }
     }
-    const limitData = data.slice((pageNum - 1) * end, (pageNum + 9) * end);
+    console.log("pageNum"+pageNum)
+    console.log("start"+start)
+
+    console.log("pageNum"+pageNum)
+
+    const limitData = data.slice(start, pageNum * end);
     total = data.length;
     ctx.body = {
       status: 200,

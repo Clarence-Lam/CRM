@@ -29,6 +29,7 @@ class TeamController {
     const { teamName, mark, id } = ctx.request.body;
     const datetime = moment().format('YYYY-MM-DD HH:mm:ss');
     await Setting.updateTeam([teamName, mark, datetime, id]).then(result => {
+      Setting.updateTeamNameInMember(teamName, id);
       ctx.body = {
         status: 200,
         statusText: '组别更新成功',
